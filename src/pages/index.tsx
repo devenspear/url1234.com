@@ -1,7 +1,7 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   Database, 
   Lock, 
@@ -28,15 +28,27 @@ export default function Home() {
   const [email, setEmail] = useState("");
 
   // tRPC Queries - showcasing different capabilities
-  const features = api.demo.getFeatures.useQuery();
-  const stats = api.demo.getStats.useQuery();
+  const features = api.demo.getFeatures.useQuery(undefined, {
+    retry: 3,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+  const stats = api.demo.getStats.useQuery(undefined, {
+    retry: 3,
+    staleTime: 5 * 60 * 1000,
+  });
   const searchResults = api.demo.searchFeatures.useQuery(
     { query: searchQuery },
-    { enabled: searchQuery.length > 0 }
+    { 
+      enabled: searchQuery.length > 0,
+      retry: 2,
+    }
   );
   const emailValidation = api.demo.validateEmail.useQuery(
     { email },
-    { enabled: email.includes("@") }
+    { 
+      enabled: email.includes("@"),
+      retry: 2,
+    }
   );
   
   // Protected queries
@@ -48,6 +60,27 @@ export default function Home() {
     undefined,
     { enabled: !!sessionData }
   );
+
+  // Debug logging
+  console.log("Page rendered, sessionData:", sessionData);
+  
+  useEffect(() => {
+    console.log("Features state:", { 
+      isLoading: features.isLoading, 
+      isError: features.isError, 
+      data: features.data,
+      error: features.error 
+    });
+  }, [features.isLoading, features.isError, features.data, features.error]);
+
+  useEffect(() => {
+    console.log("Stats state:", { 
+      isLoading: stats.isLoading, 
+      isError: stats.isError, 
+      data: stats.data,
+      error: stats.error 
+    });
+  }, [stats.isLoading, stats.isError, stats.data, stats.error]);
 
   return (
     <>
@@ -98,18 +131,37 @@ export default function Home() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.8 }}
             >
-              {stats.data && Object.entries(stats.data).map(([key, value], index) => (
-                <motion.div
-                  key={key}
-                  className="text-center p-4 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10"
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.7 + index * 0.1 }}
-                >
-                  <div className="text-2xl font-bold text-blue-400">{value}</div>
-                  <div className="text-sm text-gray-400 capitalize">{key.replace(/([A-Z])/g, ' $1')}</div>
-                </motion.div>
-              ))}
+              {stats.isLoading ? (
+                Array.from({ length: 4 }).map((_, index) => (
+                  <motion.div
+                    key={index}
+                    className="text-center p-4 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10"
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.7 + index * 0.1 }}
+                  >
+                    <div className="text-2xl font-bold text-blue-400 animate-pulse">...</div>
+                    <div className="text-sm text-gray-400">Loading</div>
+                  </motion.div>
+                ))
+              ) : stats.error ? (
+                <div className="text-center col-span-4 text-red-400">
+                  Error loading stats: {stats.error.message}
+                </div>
+              ) : stats.data ? (
+                Object.entries(stats.data).map(([key, value], index) => (
+                  <motion.div
+                    key={key}
+                    className="text-center p-4 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10"
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.7 + index * 0.1 }}
+                  >
+                    <div className="text-2xl font-bold text-blue-400">{value}</div>
+                    <div className="text-sm text-gray-400 capitalize">{key.replace(/([A-Z])/g, ' $1')}</div>
+                  </motion.div>
+                ))
+              ) : null}
             </motion.div>
           </div>
         </motion.section>
@@ -127,7 +179,39 @@ export default function Home() {
             </motion.h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {features.data?.map((feature, index) => (
+              {features.isLoading ? (
+                Array.from({ length: 5 }).map((_, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <Card className="h-full bg-gray-900/50 border-gray-700">
+                      <CardHeader>
+                        <div className="flex items-center gap-2">
+                          <Activity className="h-5 w-5 text-blue-400 animate-pulse" />
+                          <CardTitle className="text-white">Loading...</CardTitle>
+                        </div>
+                        <CardDescription className="text-gray-400 animate-pulse">
+                          Loading feature details...
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex items-center gap-2">
+                          <div className="h-4 w-4 bg-gray-600 rounded animate-pulse" />
+                          <span className="text-sm text-gray-500 animate-pulse">Loading</span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))
+              ) : features.error ? (
+                <div className="col-span-full text-center text-red-400">
+                  Error loading features: {features.error.message}
+                </div>
+              ) : features.data?.map((feature, index) => (
                 <motion.div
                   key={feature.id}
                   initial={{ opacity: 0, y: 50 }}
@@ -191,7 +275,10 @@ export default function Home() {
                       type="text"
                       placeholder="Search features..."
                       value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onChange={(e) => {
+                        console.log("Search query changed:", e.target.value);
+                        setSearchQuery(e.target.value);
+                      }}
                       className="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-blue-500 focus:outline-none"
                     />
                     {searchResults.data && (
@@ -230,7 +317,10 @@ export default function Home() {
                       type="email"
                       placeholder="Enter your email..."
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => {
+                        console.log("Email changed:", e.target.value);
+                        setEmail(e.target.value);
+                      }}
                       className="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 text-white focus:border-blue-500 focus:outline-none"
                     />
                     {emailValidation.data && (
@@ -319,7 +409,10 @@ export default function Home() {
                   </CardHeader>
                   <CardContent>
                     <Button 
-                      onClick={() => void signIn()} 
+                      onClick={() => {
+                        console.log("Sign in button clicked");
+                        void signIn();
+                      }} 
                       className="w-full bg-blue-600 hover:bg-blue-700"
                     >
                       <ArrowRight className="mr-2 h-4 w-4" />
