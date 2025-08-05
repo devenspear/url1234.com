@@ -45,16 +45,29 @@ A comprehensive demonstration of the T3 Stack capabilities, featuring a beautifu
 
 ## 🚀 Quick Deploy to Vercel
 
-1. **Fork this repository**
-2. **Connect to Vercel** - Import your GitHub repo
-3. **Set Environment Variables**:
+1. **Click the Deploy Button Below**:
+   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/devenspear/url1234.com)
+
+2. **Set Required Environment Variables** in Vercel:
    ```bash
-   DATABASE_URL="postgresql://..."  # Your database URL
-   AUTH_SECRET="your-secret-key"
-   AUTH_DISCORD_ID="optional"       # For Discord OAuth
-   AUTH_DISCORD_SECRET="optional"
+   # Required - Generate with: node scripts/generate-auth-secret.js
+   AUTH_SECRET="your-generated-secret-key"
+   
+   # Required - For demo purposes, you can use SQLite
+   DATABASE_URL="file:./prod.db"
+   
+   # Optional - For Discord OAuth (leave empty if not using)
+   AUTH_DISCORD_ID=""
+   AUTH_DISCORD_SECRET=""
    ```
-4. **Deploy** - Vercel will automatically build and deploy
+
+3. **Deploy** - Vercel will automatically build and deploy
+
+### Alternative: Manual Setup
+1. Fork this repository
+2. Import into Vercel from your GitHub
+3. Add the environment variables above
+4. Deploy!
 
 ## 🏃‍♂️ Local Development
 
@@ -113,16 +126,30 @@ src/
 
 ## 📝 Environment Variables
 
-Required for full functionality:
+### Required for Deployment:
 
 ```bash
-# Database
-DATABASE_URL="your-database-url"
+# Database (SQLite for demo, PostgreSQL for production)
+DATABASE_URL="file:./prod.db"
 
-# NextAuth.js
-AUTH_SECRET="your-secret-key"
+# NextAuth.js Secret (generate a secure random string)
+AUTH_SECRET="your-32-character-secret"
+
+# Optional Discord OAuth
 AUTH_DISCORD_ID="optional-discord-client-id"
 AUTH_DISCORD_SECRET="optional-discord-client-secret"
+```
+
+### Generate AUTH_SECRET:
+```bash
+# Run this to generate a secure secret
+node scripts/generate-auth-secret.js
+
+# Or use OpenSSL
+openssl rand -base64 32
+
+# Or use online generator
+# https://generate-secret.vercel.app/32
 ```
 
 ## 🤝 Contributing
