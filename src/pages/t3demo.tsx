@@ -496,6 +496,14 @@ export default function T3Demo() {
                   ← Back to Home
                 </Button>
               </Link>
+              <Link href="/OADemo">
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                >
+                  OA Demo
+                </Button>
+              </Link>
               <Button 
                 variant="ghost" 
                 size="sm"
