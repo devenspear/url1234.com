@@ -1,6 +1,8 @@
 import Head from "next/head";
 import Link from "next/link";
 
+// Force deployment trigger
+
 export default function Home() {
   return (
     <>
