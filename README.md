@@ -120,7 +120,8 @@ src/
 
 ## 🔗 Useful Links
 
-- [Live Demo](https://url1234.com) - See it in action
+- [Live Demo](https://url1234.com/t3demo) - See the T3 Stack demo in action
+- [Home Page](https://url1234.com) - Simple landing page
 - [T3 Stack Documentation](https://create.t3.gg/)
 - [Vercel Deployment Guide](https://vercel.com/docs)
 
