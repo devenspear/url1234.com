@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Link from "next/link";
 
 export default function OADemo() {
   return (
@@ -85,22 +84,7 @@ export default function OADemo() {
             </div>
           </div>
 
-          {/* Navigation */}
-          <div className="text-center mt-16">
-            <Link 
-              href="/" 
-              className="text-lg text-cyan-400 hover:text-cyan-300 transition-colors underline"
-            >
-              ← Back to Home
-            </Link>
-            <span className="mx-4 text-gray-400">|</span>
-            <Link 
-              href="/t3demo" 
-              className="text-lg text-violet-400 hover:text-violet-300 transition-colors underline"
-            >
-              View T3 Demo →
-            </Link>
-          </div>
+
         </div>
       </div>
     </>

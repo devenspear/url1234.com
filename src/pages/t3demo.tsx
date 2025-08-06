@@ -1,6 +1,5 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { 
@@ -539,22 +538,6 @@ export default function T3Demo() {
               Built with the T3 Stack • Ready for production deployment
             </p>
             <div className="mt-4 flex justify-center gap-4">
-              <Link href="/">
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                >
-                  ← Back to Home
-                </Button>
-              </Link>
-              <Link href="/OADemo">
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                >
-                  OA Demo
-                </Button>
-              </Link>
               <Button 
                 variant="ghost" 
                 size="sm"
