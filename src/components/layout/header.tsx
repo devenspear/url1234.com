@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -67,9 +67,18 @@ export function Header() {
     return () => window.removeEventListener('popstate', handleRouteChange);
   }, []);
 
-  const handleMenuToggle = () => {
+  const handleMenuToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     console.log('Menu toggle clicked, current state:', mobileMenuOpen);
-    setMobileMenuOpen(!mobileMenuOpen);
+    setMobileMenuOpen(prev => !prev);
+  };
+
+  const handleMenuToggleTouch = (e: React.TouchEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('Menu toggle touched, current state:', mobileMenuOpen);
+    setMobileMenuOpen(prev => !prev);
   };
 
   const handleMenuClose = () => {
@@ -123,8 +132,9 @@ export function Header() {
         <div className="flex lg:hidden">
           <button
             type="button"
-            className="mobile-menu-button inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500 min-h-[44px] min-w-[44px]"
+            className="mobile-menu-button inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500 min-h-[44px] min-w-[44px] bg-white"
             onClick={handleMenuToggle}
+            onTouchEnd={handleMenuToggleTouch}
             aria-label={mobileMenuOpen ? "Close mobile menu" : "Open mobile menu"}
             aria-expanded={mobileMenuOpen}
           >
@@ -138,83 +148,74 @@ export function Header() {
       </nav>
 
       {/* Mobile menu */}
-      <AnimatePresence mode="wait">
-        {mobileMenuOpen && (
+      {mobileMenuOpen && (
+        <div className="lg:hidden mobile-menu-container">
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
+            onClick={handleMenuClose}
+          />
+          
+          {/* Menu panel */}
           <motion.div
-            key="mobile-menu"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="lg:hidden mobile-menu-container"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="fixed inset-y-0 right-0 z-50 w-full max-w-sm overflow-y-auto bg-white shadow-xl"
           >
-            {/* Backdrop */}
-            <div 
-              className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
-              onClick={handleMenuClose}
-            />
+            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+              <Link 
+                href="/kaleido-test" 
+                className="flex items-center space-x-2"
+                onClick={handleMenuClose}
+              >
+                <img 
+                  src="/kaleidoscope-logo.svg" 
+                  alt="Kaleidoscope Logo" 
+                  className="w-10 h-10"
+                />
+                <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                  Kaleidoscope
+                </span>
+              </Link>
+              <button
+                type="button"
+                className="inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500 min-h-[44px] min-w-[44px]"
+                onClick={handleMenuClose}
+                aria-label="Close mobile menu"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
             
-            {/* Menu panel */}
-            <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 right-0 z-50 w-full max-w-sm overflow-y-auto bg-white shadow-xl"
-            >
-              <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                <Link 
-                  href="/kaleido-test" 
-                  className="flex items-center space-x-2"
-                  onClick={handleMenuClose}
-                >
-                  <img 
-                    src="/kaleidoscope-logo.svg" 
-                    alt="Kaleidoscope Logo" 
-                    className="w-10 h-10"
-                  />
-                  <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                    Kaleidoscope
-                  </span>
-                </Link>
-                <button
-                  type="button"
-                  className="inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500 min-h-[44px] min-w-[44px]"
-                  onClick={handleMenuClose}
-                  aria-label="Close mobile menu"
-                >
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
-              
-              <div className="px-4 py-6">
-                <div className="space-y-1">
-                  {navigation.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className="block px-3 py-4 text-xl font-semibold text-gray-900 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors min-h-[44px] flex items-center"
-                      onClick={handleMenuClose}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
-                
-                <div className="mt-8 pt-6 border-t border-gray-200">
+            <div className="px-4 py-6">
+              <div className="space-y-1">
+                {navigation.map((item) => (
                   <Link
-                    href="/kaleido-test/assessment"
-                    className="block w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-4 rounded-full font-semibold text-center hover:shadow-lg transition-all duration-200 min-h-[44px] flex items-center justify-center"
+                    key={item.name}
+                    href={item.href}
+                    className="block px-3 py-4 text-xl font-semibold text-gray-900 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors min-h-[44px] flex items-center"
                     onClick={handleMenuClose}
                   >
-                    Start Assessment
+                    {item.name}
                   </Link>
-                </div>
+                ))}
               </div>
-            </motion.div>
+              
+              <div className="mt-8 pt-6 border-t border-gray-200">
+                <Link
+                  href="/kaleido-test/assessment"
+                  className="block w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-4 rounded-full font-semibold text-center hover:shadow-lg transition-all duration-200 min-h-[44px] flex items-center justify-center"
+                  onClick={handleMenuClose}
+                >
+                  Start Assessment
+                </Link>
+              </div>
+            </div>
           </motion.div>
-        )}
-      </AnimatePresence>
+        </div>
+      )}
     </header>
   );
 }
