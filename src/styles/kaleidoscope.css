@@ -25,11 +25,22 @@
   border-radius: 9999px;
   font-weight: 600;
   transition: all 0.2s;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: none;
+  outline: none;
 }
 
 .btn-primary:hover {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   transform: scale(1.05);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
 }
 
 .btn-secondary {
@@ -39,11 +50,22 @@
   border-radius: 9999px;
   font-weight: 600;
   transition: all 0.2s;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: transparent;
+  outline: none;
 }
 
 .btn-secondary:hover {
   background: #9333ea;
   color: white;
+}
+
+.btn-secondary:active {
+  transform: scale(0.98);
 }
 
 .card-hover {
@@ -56,7 +78,13 @@
 }
 
 .section-padding {
-  padding: 4rem 0;
+  padding: 3rem 0;
+}
+
+@media (min-width: 640px) {
+  .section-padding {
+    padding: 4rem 0;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -68,7 +96,13 @@
 .container-width {
   margin: 0 auto;
   max-width: 80rem;
-  padding: 0 1.5rem;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-width {
+    padding: 0 1.5rem;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -126,5 +160,135 @@
   }
   100% {
     background-position: 200% 0;
+  }
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 640px) {
+  /* Improve touch targets on mobile */
+  button, 
+  [role="button"],
+  input[type="submit"],
+  input[type="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Better text readability on mobile */
+  h1 {
+    font-size: clamp(2rem, 8vw, 4rem);
+    line-height: 1.1;
+  }
+  
+  h2 {
+    font-size: clamp(1.5rem, 6vw, 2.5rem);
+    line-height: 1.2;
+  }
+  
+  /* Improve spacing on mobile */
+  .container-width {
+    padding: 0 1rem;
+  }
+  
+  /* Better button sizing on mobile */
+  .btn-primary,
+  .btn-secondary {
+    padding: 0.875rem 1.25rem;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+}
+
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+  /* Fix for iOS Safari viewport issues */
+  .mobile-menu-fix {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  /* Improve scrolling on iOS */
+  .ios-scroll-fix {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Fix for iOS Safari input zoom */
+  input[type="email"],
+  input[type="text"],
+  input[type="tel"],
+  input[type="password"] {
+    font-size: 16px;
+  }
+}
+
+/* Prevent horizontal scroll on mobile */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Improve focus states for accessibility */
+button:focus,
+input:focus,
+a:focus {
+  outline: 2px solid #9333ea;
+  outline-offset: 2px;
+}
+
+/* Better mobile navigation */
+@media (max-width: 1024px) {
+  .mobile-nav-item {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s;
+  }
+  
+  .mobile-nav-item:hover,
+  .mobile-nav-item:focus {
+    background-color: rgba(147, 51, 234, 0.1);
+  }
+  
+  .mobile-nav-item:last-child {
+    border-bottom: none;
+  }
+}
+
+/* Responsive typography */
+.text-responsive {
+  font-size: clamp(1rem, 4vw, 1.25rem);
+}
+
+.text-responsive-lg {
+  font-size: clamp(1.5rem, 6vw, 2.5rem);
+}
+
+.text-responsive-xl {
+  font-size: clamp(2rem, 8vw, 4rem);
+}
+
+/* Mobile-first grid improvements */
+.grid-mobile-first {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .grid-mobile-first {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-mobile-first {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
   }
 }

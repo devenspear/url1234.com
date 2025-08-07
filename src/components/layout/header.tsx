@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const navigation = [
   { name: "Home", href: "/kaleido-test" },
@@ -18,21 +18,46 @@ const navigation = [
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [mobileMenuOpen]);
+
+  // Close mobile menu on escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, []);
+
   return (
     <header className="bg-white/95 backdrop-blur-md border-b border-purple-100 sticky top-0 z-50">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between p-4 lg:p-6 lg:px-8">
         {/* Logo */}
         <Link href="/kaleido-test" className="flex items-center">
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className="flex items-center space-x-3"
+            className="flex items-center space-x-2 lg:space-x-3"
           >
             <img 
               src="/kaleidoscope-logo.svg" 
               alt="Kaleidoscope Logo" 
-              className="w-30 h-30"
+              className="w-8 h-8 lg:w-10 lg:h-10"
             />
-            <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            <span className="text-lg lg:text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
               Kaleidoscope
             </span>
           </motion.div>
@@ -65,8 +90,9 @@ export function Header() {
         <div className="flex lg:hidden">
           <button
             type="button"
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+            className="inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500 min-h-[44px] min-w-[44px]"
             onClick={() => setMobileMenuOpen(true)}
+            aria-label="Open mobile menu"
           >
             <Menu className="h-6 w-6" />
           </button>
@@ -74,61 +100,82 @@ export function Header() {
       </nav>
 
       {/* Mobile menu */}
-      {mobileMenuOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="lg:hidden"
-        >
-          <div className="fixed inset-0 z-50" />
-          <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
-            <div className="flex items-center justify-between">
-              <Link href="/kaleido-test" className="flex items-center space-x-3">
-                            <img 
-              src="/kaleidoscope-logo.svg" 
-              alt="Kaleidoscope Logo" 
-              className="w-24 h-24"
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="lg:hidden"
+          >
+            {/* Backdrop */}
+            <div 
+              className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
+              onClick={() => setMobileMenuOpen(false)}
             />
-                <span className="text-lg font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                  Kaleidoscope
-                </span>
-              </Link>
-              <button
-                type="button"
-                className="-m-2.5 rounded-md p-2.5 text-gray-700"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <X className="h-6 w-6" />
-              </button>
-            </div>
-            <div className="mt-6 flow-root">
-              <div className="-my-6 divide-y divide-gray-500/10">
-                <div className="space-y-2 py-6">
+            
+            {/* Menu panel */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed inset-y-0 right-0 z-50 w-full max-w-sm overflow-y-auto bg-white shadow-xl"
+            >
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <Link 
+                  href="/kaleido-test" 
+                  className="flex items-center space-x-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <img 
+                    src="/kaleidoscope-logo.svg" 
+                    alt="Kaleidoscope Logo" 
+                    className="w-8 h-8"
+                  />
+                  <span className="text-lg font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                    Kaleidoscope
+                  </span>
+                </Link>
+                <button
+                  type="button"
+                  className="inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500 min-h-[44px] min-w-[44px]"
+                  onClick={() => setMobileMenuOpen(false)}
+                  aria-label="Close mobile menu"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+              
+              <div className="px-4 py-6">
+                <div className="space-y-1">
                   {navigation.map((item) => (
                     <Link
                       key={item.name}
                       href={item.href}
-                      className="-mx-3 block rounded-lg px-3 py-2 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                      className="block px-3 py-4 text-lg font-semibold text-gray-900 hover:bg-purple-50 hover:text-purple-600 rounded-lg transition-colors min-h-[44px] flex items-center"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {item.name}
                     </Link>
                   ))}
                 </div>
-                <div className="py-6">
+                
+                <div className="mt-8 pt-6 border-t border-gray-200">
                   <Link
                     href="/kaleido-test/assessment"
-                    className="block bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-full font-semibold text-center"
+                    className="block w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-4 rounded-full font-semibold text-center hover:shadow-lg transition-all duration-200 min-h-[44px] flex items-center justify-center"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Start Assessment
                   </Link>
                 </div>
               </div>
-            </div>
-          </div>
-        </motion.div>
-      )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
