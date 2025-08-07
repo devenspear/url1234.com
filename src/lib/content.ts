@@ -11,7 +11,7 @@ export function parseMarkdownContent(content: string) {
   // Simple markdown parser for now - can be enhanced later
   const lines = content.split('\n');
   let title = '';
-  let sections: { [key: string]: string[] } = {};
+  const sections: Record<string, string[]> = {};
   let currentSection = '';
   
   for (const line of lines) {

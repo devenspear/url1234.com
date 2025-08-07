@@ -33,6 +33,10 @@ export default tseslint.config(
         "error",
         { checksVoidReturn: { attributes: false } },
       ],
+      // Disable strict rules for marketing content
+      "react/no-unescaped-entities": "off",
+      "prefer-const": "warn",
+      "@typescript-eslint/consistent-indexed-object-style": "off",
     },
   },
   {

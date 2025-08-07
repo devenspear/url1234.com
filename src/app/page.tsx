@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { VideoPlaceholder } from "~/components/ui/video-placeholder";
-import { Download, BookOpen, ShoppingCart, ArrowRight, Heart, Zap, Shield } from "lucide-react";
+import { Download, BookOpen, ArrowRight, Heart, Zap, Shield } from "lucide-react";
 import Link from "next/link";
 
 export default function HomePage() {
