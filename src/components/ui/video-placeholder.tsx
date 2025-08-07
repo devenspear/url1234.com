@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 interface VideoPlaceholderProps {
   title: string;
   duration?: string;
-  thumbnail?: string;
   className?: string;
   showControls?: boolean;
 }
@@ -14,7 +13,6 @@ interface VideoPlaceholderProps {
 export function VideoPlaceholder({ 
   title, 
   duration = "2:45", 
-  thumbnail, 
   className = "",
   showControls = true 
 }: VideoPlaceholderProps) {

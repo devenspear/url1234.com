@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Heart, Users, Lightbulb, Zap, Award, ArrowRight, Mail } from "lucide-react";
+import { Heart, Users, Lightbulb, Zap, Award, Mail } from "lucide-react";
 
 export default function HealersPage() {
   const idealProfile = [

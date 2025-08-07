@@ -1,39 +1,79 @@
 /* Kaleidoscope-specific styles */
-@layer components {
-  .gradient-text {
-    @apply bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent;
-  }
-  
-  .gradient-bg {
-    @apply bg-gradient-to-r from-purple-600 to-blue-600;
-  }
-  
-  .spiritual-gradient {
-    @apply bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900;
-  }
-  
-  .healing-gradient {
-    @apply bg-gradient-to-r from-purple-600 via-pink-500 to-blue-500;
-  }
-  
-  .btn-primary {
-    @apply bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:shadow-lg transition-all duration-200 hover:scale-105;
-  }
-  
-  .btn-secondary {
-    @apply border-2 border-purple-600 text-purple-600 px-6 py-3 rounded-full font-semibold hover:bg-purple-600 hover:text-white transition-all duration-200;
-  }
-  
-  .card-hover {
-    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
-  }
-  
+.gradient-text {
+  background: linear-gradient(to right, #9333ea, #2563eb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-bg {
+  background: linear-gradient(to right, #9333ea, #2563eb);
+}
+
+.spiritual-gradient {
+  background: linear-gradient(to bottom right, #581c87, #1e3a8a, #312e81);
+}
+
+.healing-gradient {
+  background: linear-gradient(to right, #9333ea, #ec4899, #3b82f6);
+}
+
+.btn-primary {
+  background: linear-gradient(to right, #9333ea, #2563eb);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transform: scale(1.05);
+}
+
+.btn-secondary {
+  border: 2px solid #9333ea;
+  color: #9333ea;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #9333ea;
+  color: white;
+}
+
+.card-hover {
+  transition: all 0.3s;
+}
+
+.card-hover:hover {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  transform: translateY(-0.25rem);
+}
+
+.section-padding {
+  padding: 4rem 0;
+}
+
+@media (min-width: 1024px) {
   .section-padding {
-    @apply py-16 lg:py-24;
+    padding: 6rem 0;
   }
-  
+}
+
+.container-width {
+  margin: 0 auto;
+  max-width: 80rem;
+  padding: 0 1.5rem;
+}
+
+@media (min-width: 1024px) {
   .container-width {
-    @apply mx-auto max-w-7xl px-6 lg:px-8;
+    padding: 0 2rem;
   }
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { VideoPlaceholder } from "~/components/ui/video-placeholder";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, CheckCircle, X, ArrowRight, Video } from "lucide-react";
@@ -58,9 +58,7 @@ const littleBookBelief = [
 
 export default function AssessmentPage() {
   const [currentVideo, setCurrentVideo] = useState(0);
-  const [selectedVideo, setSelectedVideo] = useState<number | null>(null);
   const [responses, setResponses] = useState<Record<number, boolean>>({});
-  const [showAssessment, setShowAssessment] = useState(false);
   const [currentStep, setCurrentStep] = useState<'videos' | 'beliefs' | 'full-assessment'>('videos');
 
   const handleVideoSelect = (index: number) => {

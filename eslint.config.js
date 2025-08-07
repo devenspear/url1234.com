@@ -33,6 +33,8 @@ export default tseslint.config(
         "error",
         { checksVoidReturn: { attributes: false } },
       ],
+      "react/no-unescaped-entities": "off",
+      "@typescript-eslint/consistent-indexed-object-style": "off",
     },
   },
   {

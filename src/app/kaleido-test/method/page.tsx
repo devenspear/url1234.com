@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { VideoPlaceholder } from "~/components/ui/video-placeholder";
-import { Play, ArrowRight, CheckCircle, Users, Heart, Smartphone } from "lucide-react";
+import { ArrowRight, CheckCircle, Users, Heart, Smartphone } from "lucide-react";
 import Link from "next/link";
 
 export default function MethodPage() {
