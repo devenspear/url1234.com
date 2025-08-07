@@ -225,6 +225,24 @@
   input[type="password"] {
     font-size: 16px;
   }
+  
+  /* Fix for iOS Safari mobile menu */
+  .mobile-menu-container {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  
+  /* Ensure proper z-index stacking on iOS */
+  .mobile-menu-container .fixed {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  
+  /* Fix for iOS Safari button states */
+  .mobile-menu-button:active {
+    -webkit-transform: scale(0.95);
+    transform: scale(0.95);
+  }
 }
 
 /* Prevent horizontal scroll on mobile */
@@ -290,5 +308,28 @@ a:focus {
   .grid-mobile-first {
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
+  }
+}
+
+/* iOS-specific mobile menu fixes */
+@media (max-width: 1024px) {
+  .mobile-menu-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+  }
+  
+  .mobile-menu-container .fixed {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: auto !important;
+    width: 100% !important;
+    max-width: 24rem !important;
+    z-index: 51 !important;
   }
 }

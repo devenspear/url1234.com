@@ -13,7 +13,7 @@ export default function HomePage() {
       <Header />
       <div>
       {/* Hero Section */}
-      <section className="relative min-h-[70vh] flex items-center spiritual-gradient overflow-hidden">
+      <section className="relative min-h-[70vh] flex items-center spiritual-gradient overflow-hidden pt-16 sm:pt-20 lg:pt-0">
         <div className="absolute inset-0 bg-black/20" />
         <div className="container-width relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
