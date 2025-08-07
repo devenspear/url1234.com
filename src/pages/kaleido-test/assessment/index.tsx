@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { VideoPlaceholder } from "~/components/ui/video-placeholder";
 import { useState } from "react";
-import { Video, CheckCircle, ArrowRight, Heart, Users, Lightbulb } from "lucide-react";
+import { Video, CheckCircle, ArrowRight, Heart } from "lucide-react";
 import { Header } from "~/components/layout/header";
 import { Footer } from "~/components/layout/footer";
 
@@ -135,12 +135,12 @@ export default function AssessmentPage() {
                 {/* Main Video Display */}
                 <div className="max-w-4xl mx-auto mb-8">
                   <VideoPlaceholder 
-                    title={videoCarousel[currentVideo]?.title || "Video"}
-                    duration={videoCarousel[currentVideo]?.duration || "0:00"}
+                    title={videoCarousel[currentVideo]?.title ?? "Video"}
+                    duration={videoCarousel[currentVideo]?.duration ?? "0:00"}
                     className="shadow-2xl"
                   />
                   <p className="text-center mt-4 text-gray-600">
-                    {videoCarousel[currentVideo]?.description || ""}
+                    {videoCarousel[currentVideo]?.description ?? ""}
                   </p>
                 </div>
 

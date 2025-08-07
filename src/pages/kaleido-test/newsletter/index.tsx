@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mail, Heart, Users, Lightbulb, Zap, Award } from "lucide-react";
+import { Mail, Heart, Users, Lightbulb } from "lucide-react";
 import { Header } from "~/components/layout/header";
 import { Footer } from "~/components/layout/footer";
 
