@@ -6,13 +6,13 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 
 const navigation = [
-  { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
-  { name: "The Method", href: "/method" },
-  { name: "Assessment", href: "/assessment" },
-  { name: "Healers", href: "/healers" },
-  { name: "Insights", href: "/newsletter" },
-  { name: "FAQ", href: "/faq" },
+  { name: "Home", href: "/kaleido-test" },
+  { name: "About", href: "/kaleido-test/about" },
+  { name: "The Method", href: "/kaleido-test/method" },
+  { name: "Assessment", href: "/kaleido-test/assessment" },
+  { name: "Healers", href: "/kaleido-test/healers" },
+  { name: "Insights", href: "/kaleido-test/newsletter" },
+  { name: "FAQ", href: "/kaleido-test/faq" },
 ];
 
 export function Header() {
@@ -22,14 +22,16 @@ export function Header() {
     <header className="bg-white/95 backdrop-blur-md border-b border-purple-100 sticky top-0 z-50">
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
         {/* Logo */}
-        <Link href="/" className="flex items-center">
+        <Link href="/kaleido-test" className="flex items-center">
           <motion.div
             whileHover={{ scale: 1.05 }}
             className="flex items-center space-x-3"
           >
-            <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">K</span>
-            </div>
+            <img 
+              src="/kaleidoscope-logo.svg" 
+              alt="Kaleidoscope Logo" 
+              className="w-10 h-10"
+            />
             <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
               Kaleidoscope
             </span>
@@ -52,7 +54,7 @@ export function Header() {
         {/* CTA Button */}
         <div className="hidden lg:flex">
           <Link
-            href="/assessment"
+            href="/kaleido-test/assessment"
             className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-2 rounded-full font-semibold hover:shadow-lg transition-all duration-200 hover:scale-105"
           >
             Start Assessment
@@ -81,10 +83,12 @@ export function Header() {
           <div className="fixed inset-0 z-50" />
           <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
             <div className="flex items-center justify-between">
-              <Link href="/" className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center">
-                  <span className="text-white font-bold">K</span>
-                </div>
+              <Link href="/kaleido-test" className="flex items-center space-x-3">
+                <img 
+                  src="/kaleidoscope-logo.svg" 
+                  alt="Kaleidoscope Logo" 
+                  className="w-8 h-8"
+                />
                 <span className="text-lg font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                   Kaleidoscope
                 </span>
@@ -113,7 +117,7 @@ export function Header() {
                 </div>
                 <div className="py-6">
                   <Link
-                    href="/assessment"
+                    href="/kaleido-test/assessment"
                     className="block bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-full font-semibold text-center"
                     onClick={() => setMobileMenuOpen(false)}
                   >

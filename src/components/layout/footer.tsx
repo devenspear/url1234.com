@@ -2,12 +2,12 @@ import Link from "next/link";
 import { Instagram, Youtube, Linkedin } from "lucide-react";
 
 const quickLinks = [
-  { name: "About", href: "/about" },
-  { name: "The Method", href: "/method" },
-  { name: "Assessment", href: "/assessment" },
-  { name: "Healers", href: "/healers" },
-  { name: "Contact", href: "/contact" },
-  { name: "Privacy", href: "/privacy" },
+  { name: "About", href: "/kaleido-test/about" },
+  { name: "The Method", href: "/kaleido-test/method" },
+  { name: "Assessment", href: "/kaleido-test/assessment" },
+  { name: "Healers", href: "/kaleido-test/healers" },
+  { name: "Contact", href: "/kaleido-test/contact" },
+  { name: "Privacy", href: "/kaleido-test/privacy" },
 ];
 
 export function Footer() {
@@ -18,9 +18,11 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-lg">K</span>
-              </div>
+              <img 
+                src="/kaleidoscope-logo.svg" 
+                alt="Kaleidoscope Logo" 
+                className="w-10 h-10 brightness-0 invert"
+              />
               <span className="text-xl font-bold">Kaleidoscope</span>
             </div>
             <p className="text-gray-300 max-w-md leading-relaxed">
@@ -73,10 +75,10 @@ export function Footer() {
             © 2025 Kaleidoscope. All rights reserved.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <Link href="/privacy" className="text-gray-400 hover:text-white text-sm transition-colors">
+            <Link href="/kaleido-test/privacy" className="text-gray-400 hover:text-white text-sm transition-colors">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="text-gray-400 hover:text-white text-sm transition-colors">
+            <Link href="/kaleido-test/terms" className="text-gray-400 hover:text-white text-sm transition-colors">
               Terms of Service
             </Link>
           </div>

@@ -165,7 +165,7 @@ export default function HomePage() {
               Learn more about the Kaleidoscope method and discover how we create 
               lasting transformation where others have failed.
             </p>
-            <Link href="/method" className="inline-flex items-center gap-2 bg-white text-purple-600 px-8 py-4 rounded-full font-semibold text-lg hover:shadow-xl transition-all duration-200 hover:scale-105">
+            <Link href="/kaleido-test/method" className="inline-flex items-center gap-2 bg-white text-purple-600 px-8 py-4 rounded-full font-semibold text-lg hover:shadow-xl transition-all duration-200 hover:scale-105">
               Discover The Method
               <ArrowRight className="w-5 h-5" />
             </Link>
