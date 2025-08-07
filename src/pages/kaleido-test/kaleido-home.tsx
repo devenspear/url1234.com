@@ -4,10 +4,14 @@ import { motion } from "framer-motion";
 import { VideoPlaceholder } from "~/components/ui/video-placeholder";
 import { Download, BookOpen, ArrowRight, Heart, Zap, Shield } from "lucide-react";
 import Link from "next/link";
+import { Header } from "~/components/layout/header";
+import { Footer } from "~/components/layout/footer";
 
 export default function HomePage() {
   return (
-    <div>
+    <>
+      <Header />
+      <div>
       {/* Hero Section */}
       <section className="relative min-h-[70vh] flex items-center spiritual-gradient overflow-hidden">
         <div className="absolute inset-0 bg-black/20" />
@@ -196,6 +200,8 @@ export default function HomePage() {
           </motion.div>
         </div>
       </section>
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 }
