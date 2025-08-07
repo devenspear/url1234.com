@@ -62,7 +62,6 @@ export default function AssessmentPage() {
   const [currentStep, setCurrentStep] = useState<'videos' | 'beliefs' | 'full-assessment'>('videos');
 
   const handleVideoSelect = (index: number) => {
-    setSelectedVideo(index);
     setCurrentVideo(index);
   };
 
