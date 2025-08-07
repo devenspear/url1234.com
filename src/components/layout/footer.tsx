@@ -21,7 +21,7 @@ export function Footer() {
               <img 
                 src="/kaleidoscope-logo.svg" 
                 alt="Kaleidoscope Logo" 
-                className="w-10 h-10 brightness-0 invert"
+                className="w-30 h-30 brightness-0 invert"
               />
               <span className="text-xl font-bold">Kaleidoscope</span>
             </div>

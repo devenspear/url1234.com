@@ -30,7 +30,7 @@ export function Header() {
             <img 
               src="/kaleidoscope-logo.svg" 
               alt="Kaleidoscope Logo" 
-              className="w-10 h-10"
+              className="w-30 h-30"
             />
             <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
               Kaleidoscope
@@ -44,7 +44,7 @@ export function Header() {
             <Link
               key={item.name}
               href={item.href}
-              className="text-sm font-semibold leading-6 text-gray-700 hover:text-purple-600 transition-colors"
+              className="text-base font-semibold leading-6 text-gray-700 hover:text-purple-600 transition-colors"
             >
               {item.name}
             </Link>
@@ -84,11 +84,11 @@ export function Header() {
           <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
             <div className="flex items-center justify-between">
               <Link href="/kaleido-test" className="flex items-center space-x-3">
-                <img 
-                  src="/kaleidoscope-logo.svg" 
-                  alt="Kaleidoscope Logo" 
-                  className="w-8 h-8"
-                />
+                            <img 
+              src="/kaleidoscope-logo.svg" 
+              alt="Kaleidoscope Logo" 
+              className="w-24 h-24"
+            />
                 <span className="text-lg font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                   Kaleidoscope
                 </span>
@@ -108,7 +108,7 @@ export function Header() {
                     <Link
                       key={item.name}
                       href={item.href}
-                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                      className="-mx-3 block rounded-lg px-3 py-2 text-lg font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       {item.name}
