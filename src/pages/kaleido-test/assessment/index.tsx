@@ -135,12 +135,12 @@ export default function AssessmentPage() {
                 {/* Main Video Display */}
                 <div className="max-w-4xl mx-auto mb-8">
                   <VideoPlaceholder 
-                    title={videoCarousel[currentVideo].title}
-                    duration={videoCarousel[currentVideo].duration}
+                    title={videoCarousel[currentVideo]?.title || "Video"}
+                    duration={videoCarousel[currentVideo]?.duration || "0:00"}
                     className="shadow-2xl"
                   />
                   <p className="text-center mt-4 text-gray-600">
-                    {videoCarousel[currentVideo].description}
+                    {videoCarousel[currentVideo]?.description || ""}
                   </p>
                 </div>
 
