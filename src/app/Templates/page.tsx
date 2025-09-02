@@ -22,7 +22,9 @@ import {
   Zap,
   Palette,
   Layers,
-  ArrowRight
+  ArrowRight,
+  Moon,
+  Sun
 } from 'lucide-react'
 
 interface Template {
@@ -48,6 +50,7 @@ export default function TemplateManagerPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null)
   const [deployedPages, setDeployedPages] = useState<DeployedPage[]>([])
   const [isCreating, setIsCreating] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(false)
   const [newPageUrl, setNewPageUrl] = useState('')
   const [copiedCode, setCopiedCode] = useState(false)
 
@@ -114,7 +117,25 @@ export default function TemplateManagerPage() {
     if (saved) {
       setDeployedPages(JSON.parse(saved))
     }
+    
+    // Load dark mode preference
+    const darkMode = localStorage.getItem('darkMode')
+    if (darkMode === 'true') {
+      setIsDarkMode(true)
+      document.documentElement.classList.add('dark')
+    }
   }, [])
+
+  // Dark mode toggle effect
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark')
+      localStorage.setItem('darkMode', 'true')
+    } else {
+      document.documentElement.classList.remove('dark')
+      localStorage.setItem('darkMode', 'false')
+    }
+  }, [isDarkMode])
 
   const handleCreatePage = async () => {
     if (!selectedTemplate || !newPageUrl) return
@@ -167,22 +188,31 @@ export default function ${newPageUrl || 'YourPage'}Page() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+    <div className={`min-h-screen transition-colors duration-200 ${isDarkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-slate-50 via-white to-slate-50'}`}>
       {/* Header */}
-      <div className="relative overflow-hidden bg-white border-b border-gray-100">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-indigo-50 opacity-50"></div>
+      <div className={`relative overflow-hidden border-b transition-colors duration-200 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+        <div className={`absolute inset-0 opacity-50 ${isDarkMode ? 'bg-gradient-to-r from-gray-700 to-gray-600' : 'bg-gradient-to-r from-blue-50 to-indigo-50'}`}></div>
         <div className="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12">
+          {/* Dark Mode Toggle */}
+          <div className="absolute top-6 right-6">
+            <button
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className={`p-3 rounded-full transition-all duration-200 hover:scale-105 ${isDarkMode ? 'bg-gray-700 text-yellow-400 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+            >
+              {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
+          </div>
           <div className="text-center">
             <div className="flex items-center justify-center mb-6">
               <div className="p-3 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl shadow-lg">
                 <Layout className="w-8 h-8 text-white" />
               </div>
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-4">
+            <h1 className={`text-5xl md:text-6xl font-bold mb-4 ${isDarkMode ? 'bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent' : 'bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent'}`}>
               Template Manager
             </h1>
-            <p className="text-xl text-gray-600 mb-2">url1234.com/templates</p>
-            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+            <p className={`text-xl mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>url1234.com/templates</p>
+            <p className={`text-lg max-w-2xl mx-auto ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
               Create stunning landing pages in minutes with our professional template system
             </p>
           </div>
@@ -192,7 +222,7 @@ export default function ${newPageUrl || 'YourPage'}Page() {
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12">
         <Tabs defaultValue="templates" className="space-y-8">
           <div className="flex justify-center">
-            <TabsList className="grid w-full max-w-md grid-cols-3 h-14 p-1 bg-gray-100/50 rounded-2xl">
+            <TabsList className={`grid w-full max-w-md grid-cols-3 h-14 p-1 rounded-2xl ${isDarkMode ? 'bg-gray-800/50' : 'bg-gray-100/50'}`}>
               <TabsTrigger value="templates" className="text-sm font-medium rounded-xl">Templates</TabsTrigger>
               <TabsTrigger value="deployed" className="text-sm font-medium rounded-xl">Pages</TabsTrigger>
               <TabsTrigger value="settings" className="text-sm font-medium rounded-xl">Settings</TabsTrigger>
@@ -202,32 +232,32 @@ export default function ${newPageUrl || 'YourPage'}Page() {
           <TabsContent value="templates" className="space-y-8">
             {/* Hero Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <Card className="p-6 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+              <Card className={`p-6 ${isDarkMode ? 'bg-gradient-to-br from-blue-900/20 to-blue-800/20 border-blue-700' : 'bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200'}`}>
                 <div className="flex items-center gap-3">
                   <Zap className="w-8 h-8 text-blue-600" />
                   <div>
-                    <p className="text-2xl font-bold text-blue-900">{templates.length}</p>
-                    <p className="text-sm text-blue-700">Templates Available</p>
+                    <p className={`text-2xl font-bold ${isDarkMode ? 'text-blue-300' : 'text-blue-900'}`}>{templates.length}</p>
+                    <p className={`text-sm ${isDarkMode ? 'text-blue-400' : 'text-blue-700'}`}>Templates Available</p>
                   </div>
                 </div>
               </Card>
               
-              <Card className="p-6 bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+              <Card className={`p-6 ${isDarkMode ? 'bg-gradient-to-br from-green-900/20 to-green-800/20 border-green-700' : 'bg-gradient-to-br from-green-50 to-green-100 border-green-200'}`}>
                 <div className="flex items-center gap-3">
                   <Globe className="w-8 h-8 text-green-600" />
                   <div>
-                    <p className="text-2xl font-bold text-green-900">{deployedPages.length}</p>
-                    <p className="text-sm text-green-700">Pages Deployed</p>
+                    <p className={`text-2xl font-bold ${isDarkMode ? 'text-green-300' : 'text-green-900'}`}>{deployedPages.length}</p>
+                    <p className={`text-sm ${isDarkMode ? 'text-green-400' : 'text-green-700'}`}>Pages Deployed</p>
                   </div>
                 </div>
               </Card>
               
-              <Card className="p-6 bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+              <Card className={`p-6 ${isDarkMode ? 'bg-gradient-to-br from-purple-900/20 to-purple-800/20 border-purple-700' : 'bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200'}`}>
                 <div className="flex items-center gap-3">
                   <Layers className="w-8 h-8 text-purple-600" />
                   <div>
-                    <p className="text-2xl font-bold text-purple-900">∞</p>
-                    <p className="text-sm text-purple-700">Possibilities</p>
+                    <p className={`text-2xl font-bold ${isDarkMode ? 'text-purple-300' : 'text-purple-900'}`}>∞</p>
+                    <p className={`text-sm ${isDarkMode ? 'text-purple-400' : 'text-purple-700'}`}>Possibilities</p>
                   </div>
                 </div>
               </Card>
@@ -237,8 +267,8 @@ export default function ${newPageUrl || 'YourPage'}Page() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2 space-y-6">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Choose Your Template</h2>
-                  <p className="text-gray-600">Select from our collection of professionally designed templates</p>
+                  <h2 className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Choose Your Template</h2>
+                  <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Select from our collection of professionally designed templates</p>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -247,19 +277,19 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                       key={template.id}
                       className={`p-6 cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
                         selectedTemplate?.id === template.id 
-                          ? 'ring-2 ring-blue-500 shadow-lg bg-gradient-to-br from-blue-50 to-indigo-50' 
+                          ? `ring-2 ring-blue-500 shadow-lg ${isDarkMode ? 'bg-gradient-to-br from-blue-900/30 to-indigo-900/30' : 'bg-gradient-to-br from-blue-50 to-indigo-50'}` 
                           : 'hover:shadow-md'
-                      }`}
+                      } ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}
                       onClick={() => setSelectedTemplate(template)}
                     >
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-3">
-                          <div className="p-2 bg-gradient-to-r from-gray-100 to-gray-200 rounded-lg">
-                            <Palette className="w-5 h-5 text-gray-600" />
+                          <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-gradient-to-r from-gray-700 to-gray-600' : 'bg-gradient-to-r from-gray-100 to-gray-200'}`}>
+                            <Palette className={`w-5 h-5 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`} />
                           </div>
                           <div>
-                            <h3 className="font-bold text-gray-900">{template.name}</h3>
-                            <p className="text-xs text-gray-500">{template.category}</p>
+                            <h3 className={`font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{template.name}</h3>
+                            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{template.category}</p>
                           </div>
                         </div>
                         <Badge 
@@ -271,16 +301,16 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                         </Badge>
                       </div>
                       
-                      <p className="text-sm text-gray-600 mb-4 line-clamp-2">{template.description}</p>
+                      <p className={`text-sm mb-4 line-clamp-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{template.description}</p>
                       
                       <div className="flex flex-wrap gap-2 mb-4">
                         {template.features.slice(0, 3).map((feature, i) => (
-                          <span key={i} className="px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded-md">
+                          <span key={i} className={`px-2 py-1 text-xs rounded-md ${isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}>
                             {feature}
                           </span>
                         ))}
                         {template.features.length > 3 && (
-                          <span className="px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded-md">
+                          <span className={`px-2 py-1 text-xs rounded-md ${isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}>
                             +{template.features.length - 3} more
                           </span>
                         )}
@@ -316,26 +346,26 @@ export default function ${newPageUrl || 'YourPage'}Page() {
               {/* Configuration Panel */}
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Create New Page</h2>
-                  <p className="text-gray-600">Configure your new landing page</p>
+                  <h2 className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Create New Page</h2>
+                  <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Configure your new landing page</p>
                 </div>
                 
-                <Card className="p-6 space-y-6">
+                <Card className={`p-6 space-y-6 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                   {selectedTemplate ? (
                     <>
-                      <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+                      <div className={`p-4 rounded-xl border ${isDarkMode ? 'bg-gradient-to-r from-blue-900/20 to-indigo-900/20 border-blue-700' : 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200'}`}>
                         <div className="flex items-center gap-3 mb-2">
                           <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                          <p className="font-semibold text-blue-900">Selected Template</p>
+                          <p className={`font-semibold ${isDarkMode ? 'text-blue-300' : 'text-blue-900'}`}>Selected Template</p>
                         </div>
-                        <p className="font-bold text-blue-900">{selectedTemplate.name}</p>
-                        <p className="text-sm text-blue-700">{selectedTemplate.category}</p>
+                        <p className={`font-bold ${isDarkMode ? 'text-blue-300' : 'text-blue-900'}`}>{selectedTemplate.name}</p>
+                        <p className={`text-sm ${isDarkMode ? 'text-blue-400' : 'text-blue-700'}`}>{selectedTemplate.category}</p>
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-3">Page URL</label>
+                        <label className={`block text-sm font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Page URL</label>
                         <div className="flex items-center space-x-2">
-                          <span className="px-3 py-3 bg-gray-50 text-gray-500 text-sm rounded-l-xl border border-r-0">
+                          <span className={`px-3 py-3 text-sm rounded-l-xl border border-r-0 ${isDarkMode ? 'bg-gray-700 text-gray-300 border-gray-600' : 'bg-gray-50 text-gray-500 border-gray-300'}`}>
                             url1234.com/
                           </span>
                           <input
@@ -343,13 +373,13 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                             value={newPageUrl}
                             onChange={(e) => setNewPageUrl(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
                             placeholder="my-landing-page"
-                            className="flex-1 px-4 py-3 border border-l-0 rounded-r-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                            className={`flex-1 px-4 py-3 border border-l-0 rounded-r-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'}`}
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-3">Template Features</label>
+                        <label className={`block text-sm font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Template Features</label>
                         <div className="space-y-3">
                           {selectedTemplate.features.map((feature, i) => (
                             <label key={i} className="flex items-center gap-3">

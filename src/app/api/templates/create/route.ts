@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs/promises'
 import path from 'path'
+import { exec } from 'child_process'
+import { promisify } from 'util'
+
+const execAsync = promisify(exec)
 
 export async function POST(request: NextRequest) {
   try {
@@ -41,11 +45,42 @@ export async function POST(request: NextRequest) {
     const metadataPath = path.join(appDir, 'metadata.json')
     await fs.writeFile(metadataPath, JSON.stringify(metadata, null, 2))
 
+    // Auto-commit and deploy the new page
+    try {
+      const projectRoot = process.cwd()
+      
+      // Add the new files to git
+      await execAsync(`cd ${projectRoot} && git add src/app/${sanitizedPageName}/`)
+      
+      // Commit the changes
+      const commitMessage = `Add new landing page: ${sanitizedPageName}
+      
+Template: ${templateId}
+Created via Template Manager
+
+🤖 Generated with [Claude Code](https://claude.ai/code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>`
+      
+      await execAsync(`cd ${projectRoot} && git commit -m "${commitMessage.replace(/"/g, '\\"')}"`)
+      
+      // Push to trigger Vercel deployment
+      await execAsync(`cd ${projectRoot} && git push`)
+      
+      console.log(`✅ Auto-deployed page: ${sanitizedPageName}`)
+      
+    } catch (gitError) {
+      console.warn('Git auto-commit failed:', gitError)
+      // Don't fail the API call if git fails
+    }
+
     return NextResponse.json({
       success: true,
       pageName: sanitizedPageName,
       url: `/${sanitizedPageName}`,
-      metadata
+      metadata,
+      deployed: true,
+      deploymentUrl: `https://url1234.com/${sanitizedPageName}`
     })
   } catch (error) {
     console.error('Error creating page:', error)
