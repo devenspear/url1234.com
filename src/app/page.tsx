@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function HomePage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -9,24 +11,24 @@ export default function HomePage() {
           Welcome to url1234.com
         </p>
         <div className="space-x-4">
-          <a 
+          <Link 
             href="/templates" 
             className="inline-block px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
           >
             Template Manager
-          </a>
-          <a 
+          </Link>
+          <Link 
             href="/alysbeach" 
             className="inline-block px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors"
           >
             Alys Beach
-          </a>
-          <a 
+          </Link>
+          <Link 
             href="/kaleidoscope" 
             className="inline-block px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
           >
             Kaleidoscope
-          </a>
+          </Link>
         </div>
       </div>
     </div>
