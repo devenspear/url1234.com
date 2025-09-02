@@ -170,6 +170,31 @@ export default function TemplateManagerPage() {
     }, 3000)
   }
 
+  const handleDeletePage = async (pageId: string, pageName: string) => {
+    if (!confirm(`Are you sure you want to delete "${pageName}"? This action cannot be undone.`)) {
+      return
+    }
+
+    try {
+      // Call the API to delete the page
+      const response = await fetch(`/api/pages?page=${pageName}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        // Remove from local state
+        const updatedPages = deployedPages.filter(p => p.id !== pageId)
+        setDeployedPages(updatedPages)
+        localStorage.setItem('deployedPages', JSON.stringify(updatedPages))
+      } else {
+        alert('Failed to delete page. Please try again.')
+      }
+    } catch (error) {
+      console.error('Error deleting page:', error)
+      alert('An error occurred while deleting the page.')
+    }
+  }
+
   const copyCodeSnippet = () => {
     const code = `import { LandingPageTemplate } from '@/components/template/LandingPageTemplate'
 import { HeroSection, FeaturesSection } from '@/components/template/sections'
@@ -494,7 +519,9 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                       <button className="px-4 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center">
                         <Edit3 className="w-4 h-4" />
                       </button>
-                      <button className="px-4 py-3 border border-red-300 text-red-600 font-medium rounded-lg hover:bg-red-50 transition-colors flex items-center justify-center">
+                      <button 
+                        onClick={() => handleDeletePage(page.id, page.name)}
+                        className="px-4 py-3 border border-red-300 text-red-600 font-medium rounded-lg hover:bg-red-50 transition-colors flex items-center justify-center">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>

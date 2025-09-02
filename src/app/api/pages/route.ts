@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs/promises'
 import path from 'path'
+import { exec } from 'child_process'
+import { promisify } from 'util'
+
+const execAsync = promisify(exec)
 
 // GET - List all deployed pages
 export async function GET() {
@@ -80,6 +84,34 @@ export async function DELETE(request: NextRequest) {
 
     // Remove the directory and all its contents
     await fs.rmdir(pageDir, { recursive: true })
+
+    // Auto-commit and deploy the deletion
+    try {
+      const projectRoot = process.cwd()
+      
+      // Add the deletion to git
+      await execAsync(`cd ${projectRoot} && git add -A`)
+      
+      // Commit the deletion
+      const commitMessage = `Delete landing page: ${pageName}
+
+Removed via Template Manager
+
+🤖 Generated with [Claude Code](https://claude.ai/code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>`
+      
+      await execAsync(`cd ${projectRoot} && git commit -m "${commitMessage.replace(/"/g, '\\"')}"`)
+      
+      // Push to trigger Vercel deployment
+      await execAsync(`cd ${projectRoot} && git push`)
+      
+      console.log(`✅ Auto-deployed deletion of page: ${pageName}`)
+      
+    } catch (gitError) {
+      console.warn('Git auto-commit failed:', gitError)
+      // Don't fail the API call if git fails
+    }
 
     return NextResponse.json({ success: true })
   } catch (error) {
