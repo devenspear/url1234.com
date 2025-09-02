@@ -12,10 +12,15 @@ export function middleware(request: NextRequest) {
   }
 
   // Admin route protection (when auth is implemented)
-  if (request.nextUrl.pathname.startsWith('/Templates')) {
+  if (request.nextUrl.pathname.startsWith('/templates')) {
     // For now, allow all access
     // In production, check authentication here
     return NextResponse.next()
+  }
+  
+  // Redirect old uppercase Templates to lowercase
+  if (request.nextUrl.pathname.startsWith('/Templates')) {
+    return NextResponse.redirect(new URL('/templates', request.url))
   }
 
   return NextResponse.next()
@@ -23,6 +28,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    '/templates/:path*',
     '/Templates/:path*',
     '/api/templates/:path*',
     '/api/pages/:path*'

@@ -93,11 +93,11 @@ export default function TemplateExamplePage() {
         description="Create stunning, high-converting landing pages in minutes with our modular component system"
         primaryCTA={{
           text: 'Get Started',
-          onClick: () => console.log('Get started clicked')
+          onClick: () => window.open('/templates', '_self')
         }}
         secondaryCTA={{
           text: 'View Demo',
-          onClick: () => console.log('View demo clicked')
+          onClick: () => window.open('https://github.com/devenspear/Next-Shad-Starter2.0', '_blank')
         }}
         height="full"
         alignment="center"
@@ -118,7 +118,7 @@ export default function TemplateExamplePage() {
         description="Join thousands of developers who are building faster with our template"
         primaryCTA={{
           text: 'Start Building Today',
-          onClick: () => console.log('Start building clicked')
+          onClick: () => window.open('/templates', '_self')
         }}
         variant="gradient"
       />
@@ -136,11 +136,11 @@ export default function TemplateExamplePage() {
         description="Get access to all components and future updates"
         primaryCTA={{
           text: 'Download Template',
-          onClick: () => console.log('Download clicked')
+          onClick: () => window.open('https://github.com/devenspear/Next-Shad-Starter2.0/archive/refs/heads/main.zip', '_blank')
         }}
         secondaryCTA={{
           text: 'View Documentation',
-          onClick: () => console.log('Docs clicked')
+          onClick: () => window.open('https://github.com/devenspear/Next-Shad-Starter2.0#readme', '_blank')
         }}
         variant="centered"
       />

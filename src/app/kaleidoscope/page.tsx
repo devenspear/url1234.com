@@ -90,11 +90,11 @@ export default function KaleidoscopePage() {
         description="Discover a revolutionary approach to healing that addresses mind, body, and spirit through personalized, science-based methodologies"
         primaryCTA={{
           text: 'Start Your Journey',
-          onClick: () => console.log('Start journey clicked')
+          onClick: () => window.open('#contact', '_self')
         }}
         secondaryCTA={{
           text: 'Learn More',
-          onClick: () => console.log('Learn more clicked')
+          onClick: () => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
         }}
         height="full"
         alignment="center"
@@ -115,7 +115,7 @@ export default function KaleidoscopePage() {
         description="Take the first step towards holistic healing and personal transformation"
         primaryCTA={{
           text: 'Book Free Consultation',
-          onClick: () => console.log('Book consultation clicked')
+          onClick: () => window.open('mailto:hello@kaleidoscopehealing.com?subject=Free Consultation Request', '_blank')
         }}
         variant="gradient"
       />
@@ -133,11 +133,11 @@ export default function KaleidoscopePage() {
         description="Join thousands who have discovered the power of the Kaleidoscope Method"
         primaryCTA={{
           text: 'Get Started Now',
-          onClick: () => console.log('Get started clicked')
+          onClick: () => window.open('#contact', '_self')
         }}
         secondaryCTA={{
           text: 'Download Free Guide',
-          onClick: () => console.log('Download guide clicked')
+          onClick: () => window.open('/kaleidoscope-guide.pdf', '_blank')
         }}
         variant="centered"
       />
