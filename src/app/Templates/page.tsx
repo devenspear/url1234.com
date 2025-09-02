@@ -142,32 +142,55 @@ export default function TemplateManagerPage() {
 
     setIsCreating(true)
     
-    // Simulate page creation (in production, this would call an API)
-    const newPage: DeployedPage = {
-      id: Date.now().toString(),
-      name: newPageUrl.split('/').pop() || 'untitled',
-      url: `url1234.com/${newPageUrl}`,
-      template: selectedTemplate.name,
-      createdAt: new Date().toISOString(),
-      status: 'building'
-    }
+    try {
+      // Call the API to create the page
+      const response = await fetch('/api/templates/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          templateId: selectedTemplate.id,
+          pageName: newPageUrl,
+          configuration: {
+            title: `${selectedTemplate.name} Page`,
+            subtitle: 'Created with Template Manager',
+            description: `A page created using the ${selectedTemplate.name} template`,
+            companyName: 'Your Company'
+          }
+        })
+      })
 
-    const updatedPages = [...deployedPages, newPage]
-    setDeployedPages(updatedPages)
-    localStorage.setItem('deployedPages', JSON.stringify(updatedPages))
+      if (response.ok) {
+        const result = await response.json()
+        
+        // Add to local state
+        const newPage: DeployedPage = {
+          id: Date.now().toString(),
+          name: result.pageName,
+          url: result.deploymentUrl || `url1234.com/${result.pageName}`,
+          template: selectedTemplate.name,
+          createdAt: new Date().toISOString(),
+          status: 'live'
+        }
 
-    // Simulate build process
-    setTimeout(() => {
-      setDeployedPages(prev => 
-        prev.map(p => p.id === newPage.id ? { ...p, status: 'live' } : p)
-      )
-      localStorage.setItem('deployedPages', JSON.stringify(
-        updatedPages.map(p => p.id === newPage.id ? { ...p, status: 'live' } : p)
-      ))
+        const updatedPages = [...deployedPages, newPage]
+        setDeployedPages(updatedPages)
+        localStorage.setItem('deployedPages', JSON.stringify(updatedPages))
+        
+        // Reset form
+        setNewPageUrl('')
+        setSelectedTemplate(null)
+      } else {
+        const error = await response.json()
+        alert(`Failed to create page: ${error.error || 'Unknown error'}`)
+      }
+    } catch (error) {
+      console.error('Error creating page:', error)
+      alert('An error occurred while creating the page.')
+    } finally {
       setIsCreating(false)
-      setNewPageUrl('')
-      setSelectedTemplate(null)
-    }, 3000)
+    }
   }
 
   const handleDeletePage = async (pageId: string, pageName: string) => {
