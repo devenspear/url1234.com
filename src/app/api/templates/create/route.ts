@@ -7,9 +7,15 @@ import { promisify } from 'util'
 const execAsync = promisify(exec)
 
 export async function POST(request: NextRequest) {
+  let templateId = ''
+  let pageName = ''
+  
   try {
     const body = await request.json()
-    const { templateId, pageName, configuration } = body
+    const parsed = body as { templateId: string; pageName: string; configuration: Record<string, unknown> }
+    templateId = parsed.templateId
+    pageName = parsed.pageName
+    const configuration = parsed.configuration
 
     // Validate input
     if (!templateId || !pageName) {
