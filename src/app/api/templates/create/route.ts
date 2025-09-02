@@ -45,33 +45,35 @@ export async function POST(request: NextRequest) {
     const metadataPath = path.join(appDir, 'metadata.json')
     await fs.writeFile(metadataPath, JSON.stringify(metadata, null, 2))
 
-    // Auto-commit and deploy the new page
+    // Auto-commit and deploy the new page (simplified approach)
     try {
       const projectRoot = process.cwd()
       
-      // Add the new files to git
-      await execAsync(`cd ${projectRoot} && git add src/app/${sanitizedPageName}/`)
-      
-      // Commit the changes
-      const commitMessage = `Add new landing page: ${sanitizedPageName}
-      
-Template: ${templateId}
-Created via Template Manager
-
-🤖 Generated with [Claude Code](https://claude.ai/code)
-
-Co-Authored-By: Claude <noreply@anthropic.com>`
-      
-      await execAsync(`cd ${projectRoot} && git commit -m "${commitMessage.replace(/"/g, '\\"')}"`)
-      
-      // Push to trigger Vercel deployment
-      await execAsync(`cd ${projectRoot} && git push`)
-      
-      console.log(`✅ Auto-deployed page: ${sanitizedPageName}`)
-      
-    } catch (gitError) {
-      console.warn('Git auto-commit failed:', gitError)
-      // Don't fail the API call if git fails
+      // Check if git is available and configured
+      try {
+        await execAsync(`cd ${projectRoot} && git config user.email`)
+        await execAsync(`cd ${projectRoot} && git config user.name`)
+        
+        // Add the new files to git
+        await execAsync(`cd ${projectRoot} && git add src/app/${sanitizedPageName}/`)
+        
+        // Commit the changes
+        const commitMessage = `Add landing page: ${sanitizedPageName}`
+        
+        await execAsync(`cd ${projectRoot} && git commit -m "${commitMessage}"`)
+        
+        // Push to trigger Vercel deployment
+        await execAsync(`cd ${projectRoot} && git push`)
+        
+        console.log(`✅ Auto-deployed page: ${sanitizedPageName}`)
+        
+      } catch (gitError) {
+        console.warn('Git auto-commit failed, but page created successfully:', gitError)
+        // Don't fail the API call if git fails - page still exists locally
+      }
+    } catch (error) {
+      console.warn('Auto-deployment failed, but page created successfully:', error)
+      // Don't fail the API call - the page files were created successfully
     }
 
     return NextResponse.json({
@@ -84,15 +86,42 @@ Co-Authored-By: Claude <noreply@anthropic.com>`
     })
   } catch (error) {
     console.error('Error creating page:', error)
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : 'No stack trace',
+      templateId,
+      pageName
+    })
     return NextResponse.json(
-      { error: 'Failed to create page' },
+      { 
+        error: 'Failed to create page', 
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }
 }
 
 async function getTemplateContent(templateId: string, configuration: Record<string, unknown>): Promise<string> {
-  const { title, subtitle, description, features, testimonials, companyName } = configuration
+  const { 
+    title = 'Welcome', 
+    subtitle = 'Professional Template', 
+    description = 'Created with Template Manager', 
+    features = [], 
+    testimonials = [], 
+    companyName = 'Your Company' 
+  } = configuration
+
+  const defaultFeatures = [
+    { title: 'Feature 1', description: 'Amazing feature description' },
+    { title: 'Feature 2', description: 'Another great feature' },
+    { title: 'Feature 3', description: 'Third awesome feature' }
+  ]
+
+  const defaultTestimonials = [
+    { name: 'John Doe', content: 'Great product!', role: 'Customer', rating: 5 },
+    { name: 'Jane Smith', content: 'Highly recommended!', role: 'User', rating: 5 }
+  ]
 
   const templates: Record<string, string> = {
     'hero-landing': `'use client'
@@ -107,8 +136,8 @@ import {
 } from '@/components/template/sections'
 
 export default function Page() {
-  const features = ${JSON.stringify(features || [], null, 2)}
-  const testimonials = ${JSON.stringify(testimonials || [], null, 2)}
+  const features = ${JSON.stringify((features as any[]).length > 0 ? features : defaultFeatures, null, 2)}
+  const testimonials = ${JSON.stringify((testimonials as any[]).length > 0 ? testimonials : defaultTestimonials, null, 2)}
 
   return (
     <LandingPageTemplate>
