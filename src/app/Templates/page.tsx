@@ -389,7 +389,10 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                         Created: {new Date(page.createdAt).toLocaleDateString()}
                       </p>
                       <div className="flex gap-2">
-                        <button className="text-xs text-blue-600 hover:underline flex items-center gap-1">
+                        <button 
+                          className="text-xs text-blue-600 hover:underline flex items-center gap-1"
+                          onClick={() => window.open(`/${page.name}`, '_blank')}
+                        >
                           <ExternalLink className="w-3 h-3" />
                           Visit
                         </button>
