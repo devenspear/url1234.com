@@ -16,6 +16,12 @@ export default function HomePage() {
             Template Manager
           </a>
           <a 
+            href="/alysbeach" 
+            className="inline-block px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors"
+          >
+            Alys Beach
+          </a>
+          <a 
             href="/kaleidoscope" 
             className="inline-block px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
           >
