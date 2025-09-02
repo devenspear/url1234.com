@@ -1,0 +1,41 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "functions": {
+    "src/app/api/templates/create/route.ts": {
+      "maxDuration": 30
+    },
+    "src/app/api/pages/route.ts": {
+      "maxDuration": 20
+    }
+  },
+  "headers": [
+    {
+      "source": "/Templates",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/Templates",
+      "destination": "/Templates"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
+    }
+  ],
+  "env": {
+    "NEXT_PUBLIC_APP_URL": "@app-url",
+    "DATABASE_URL": "@database-url",
+    "NEXTAUTH_SECRET": "@nextauth-secret"
+  },
+  "regions": ["iad1"]
+}
