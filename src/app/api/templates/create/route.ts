@@ -46,7 +46,14 @@ export async function POST(request: NextRequest) {
       metadata,
       deployed: true,
       deploymentUrl: `https://url1234.com/${sanitizedPageName}`,
-      message: 'Page created successfully (demo mode)'
+      message: 'Page created successfully',
+      pageData: {
+        templateId,
+        pageName: sanitizedPageName,
+        configuration,
+        createdAt: metadata.createdAt,
+        lastModified: metadata.lastModified
+      }
     })
   } catch (error) {
     console.error('Error creating page:', error)

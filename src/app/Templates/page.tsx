@@ -171,7 +171,7 @@ export default function TemplateManagerPage() {
       if (response.ok) {
         const result = await response.json()
         
-        // Add to local state
+        // Add to local state with full configuration
         const newPage: DeployedPage = {
           id: Date.now().toString(),
           name: result.pageName,
@@ -184,6 +184,11 @@ export default function TemplateManagerPage() {
         const updatedPages = [...deployedPages, newPage]
         setDeployedPages(updatedPages)
         localStorage.setItem('deployedPages', JSON.stringify(updatedPages))
+        
+        // Also store the full page configuration for rendering
+        const pageConfigs = JSON.parse(localStorage.getItem('pageConfigurations') || '{}')
+        pageConfigs[result.pageName] = result.pageData
+        localStorage.setItem('pageConfigurations', JSON.stringify(pageConfigs))
         
         // Reset form
         setNewPageUrl('')
