@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function getTemplateContent(templateId: string, configuration: any): Promise<string> {
+async function getTemplateContent(templateId: string, configuration: Record<string, unknown>): Promise<string> {
   const { title, subtitle, description, features, testimonials, companyName } = configuration
 
   const templates: Record<string, string> = {

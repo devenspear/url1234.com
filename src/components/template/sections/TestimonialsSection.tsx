@@ -24,7 +24,6 @@ export function TestimonialsSection({
   title,
   subtitle,
   testimonials,
-  variant = 'cards',
   columns = 3
 }: TestimonialsSectionProps) {
   const gridCols = {
@@ -78,7 +77,7 @@ export function TestimonialsSection({
                 
                 <blockquote className="mb-4">
                   <p className="text-muted-foreground italic">
-                    "{testimonial.content}"
+                    &ldquo;{testimonial.content}&rdquo;
                   </p>
                 </blockquote>
                 

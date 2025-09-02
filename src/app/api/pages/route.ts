@@ -27,7 +27,7 @@ export async function GET() {
               lastModified: metadata.lastModified || new Date().toISOString(),
               status: 'live'
             }
-          } catch (error) {
+          } catch {
             // If metadata.json doesn't exist, return basic info
             const stat = await fs.stat(path.join(appDir, dir.name))
             return {

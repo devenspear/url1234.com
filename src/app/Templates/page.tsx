@@ -43,7 +43,6 @@ export default function TemplateAdminPage() {
   const [deployedPages, setDeployedPages] = useState<DeployedPage[]>([])
   const [isCreating, setIsCreating] = useState(false)
   const [newPageUrl, setNewPageUrl] = useState('')
-  const [showPreview, setShowPreview] = useState(false)
   const [copiedCode, setCopiedCode] = useState(false)
 
   const templates: Template[] = [
