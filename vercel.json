@@ -32,10 +32,5 @@
       "destination": "/api/:path*"
     }
   ],
-  "env": {
-    "NEXT_PUBLIC_APP_URL": "@app-url",
-    "DATABASE_URL": "@database-url",
-    "NEXTAUTH_SECRET": "@nextauth-secret"
-  },
   "regions": ["iad1"]
 }
