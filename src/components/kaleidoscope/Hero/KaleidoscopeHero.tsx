@@ -16,9 +16,9 @@ const KaleidoscopeHero: React.FC<KaleidoscopeHeroProps> = ({
   title = '[HERO HEADLINE - AWAITING CONTENT]',
   subtitle = '',
   showControls = false,
-  initialSpeed = 1,
-  initialSegments = 12,
-  initialComplexity = 3,
+  initialSpeed = 0.5,
+  initialSegments = 8,
+  initialComplexity = 2,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
@@ -40,6 +40,9 @@ const KaleidoscopeHero: React.FC<KaleidoscopeHeroProps> = ({
     let centerX: number, centerY: number;
     let time = 0;
     let mouseX = 0, mouseY = 0;
+    let lastFrameTime = 0;
+    const targetFPS = 30; // Reduced from 60fps for better performance
+    const frameInterval = 1000 / targetFPS;
     
     const resize = () => {
       const container = canvas.parentElement;
@@ -106,8 +109,8 @@ const KaleidoscopeHero: React.FC<KaleidoscopeHeroProps> = ({
         const layerTime = time * (1 + layer * 0.3);
         const layerScale = 1 - layer * 0.15;
     
-        // Flowing shapes
-        for (let i = 0; i < 5; i++) {
+        // Flowing shapes - reduced for performance
+        for (let i = 0; i < 3; i++) {
           const shapeTime = layerTime + i * 0.5;
           const radius = maxRadius * layerScale * (0.2 + Math.sin(shapeTime) * 0.1);
           const distance = maxRadius * layerScale * (0.3 + Math.sin(shapeTime * 0.7) * 0.3);
@@ -153,7 +156,7 @@ const KaleidoscopeHero: React.FC<KaleidoscopeHeroProps> = ({
         ctx.lineWidth = 0.5;
         ctx.globalAlpha = 0.15;
     
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < 4; i++) {
           const lineRadius = maxRadius * layerScale * (0.2 + i * 0.1);
           const lineAngle = angleStep * 0.5 + Math.sin(layerTime * 0.3 + i) * 0.2;
     
@@ -224,9 +227,9 @@ const KaleidoscopeHero: React.FC<KaleidoscopeHeroProps> = ({
       ctx.fillStyle = bgGradient;
       ctx.fillRect(0, 0, width, height);
     
-      // Add subtle noise/grain effect
-      ctx.globalAlpha = 0.03;
-      for (let i = 0; i < 100; i++) {
+      // Add subtle noise/grain effect - reduced for performance
+      ctx.globalAlpha = 0.02;
+      for (let i = 0; i < 20; i++) {
         const x = Math.random() * width;
         const y = Math.random() * height;
         const size = Math.random() * 2;
@@ -236,7 +239,15 @@ const KaleidoscopeHero: React.FC<KaleidoscopeHeroProps> = ({
       ctx.globalAlpha = 1;
     };
     
-    const animate = () => {
+    const animate = (currentTime: number = 0) => {
+      // Frame rate limiting
+      if (currentTime - lastFrameTime < frameInterval) {
+        animationRef.current = requestAnimationFrame(animate);
+        return;
+      }
+      
+      lastFrameTime = currentTime;
+      
       if (!isPaused) {
         time += 0.01 * speed;
       }
