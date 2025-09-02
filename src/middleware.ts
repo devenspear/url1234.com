@@ -5,7 +5,7 @@ export function middleware(request: NextRequest) {
   // Rate limiting for template creation
   if (request.nextUrl.pathname.startsWith('/api/templates/create')) {
     const userAgent = request.headers.get('user-agent') || 'unknown'
-    const clientIp = request.ip || 'unknown'
+    const clientIp = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
     
     // In production, implement proper rate limiting with Redis or similar
     console.log(`Template creation request from ${clientIp} - ${userAgent}`)
