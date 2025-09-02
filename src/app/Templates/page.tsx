@@ -53,6 +53,13 @@ export default function TemplateManagerPage() {
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [newPageUrl, setNewPageUrl] = useState('')
   const [copiedCode, setCopiedCode] = useState(false)
+  const [settings, setSettings] = useState({
+    vercelProject: 'url1234-main',
+    productionDomain: 'url1234.com',
+    databaseProvider: 'PostgreSQL (Supabase)',
+    authProvider: 'NextAuth.js'
+  })
+  const [settingsSaved, setSettingsSaved] = useState(false)
 
   const templates: Template[] = [
     {
@@ -239,6 +246,16 @@ export default function ${newPageUrl || 'YourPage'}Page() {
     navigator.clipboard.writeText(code)
     setCopiedCode(true)
     setTimeout(() => setCopiedCode(false), 2000)
+  }
+
+  const handleSaveSettings = () => {
+    localStorage.setItem('templateManagerSettings', JSON.stringify(settings))
+    setSettingsSaved(true)
+    setTimeout(() => setSettingsSaved(false), 2000)
+  }
+
+  const handleSettingChange = (field: string, value: string) => {
+    setSettings(prev => ({ ...prev, [field]: value }))
   }
 
   return (
@@ -438,7 +455,7 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                           {selectedTemplate.features.map((feature, i) => (
                             <label key={i} className="flex items-center gap-3">
                               <input type="checkbox" defaultChecked className="w-4 h-4 text-blue-600 rounded" />
-                              <span className="text-sm text-gray-700">{feature}</span>
+                              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{feature}</span>
                             </label>
                           ))}
                         </div>
@@ -465,7 +482,7 @@ export default function ${newPageUrl || 'YourPage'}Page() {
 
                         <button
                           onClick={copyCodeSnippet}
-                          className="w-full px-6 py-4 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
+                          className={`w-full px-6 py-4 border font-medium rounded-xl transition-colors flex items-center justify-center gap-2 ${isDarkMode ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'}`}
                         >
                           {copiedCode ? (
                             <>
@@ -498,10 +515,17 @@ export default function ${newPageUrl || 'YourPage'}Page() {
           <TabsContent value="deployed" className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">Deployed Pages</h2>
-                <p className="text-gray-600">Manage your live landing pages</p>
+                <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Deployed Pages</h2>
+                <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Manage your live landing pages</p>
               </div>
-              <button className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-200 flex items-center gap-2 shadow-lg">
+              <button 
+                onClick={() => {
+                  // Switch to templates tab
+                  const templatesTab = document.querySelector('[value="templates"]') as HTMLButtonElement
+                  templatesTab?.click()
+                }}
+                className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-200 flex items-center gap-2 shadow-lg"
+              >
                 <Plus className="w-5 h-5" />
                 New Page
               </button>
@@ -510,15 +534,15 @@ export default function ${newPageUrl || 'YourPage'}Page() {
             {deployedPages.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {deployedPages.map((page) => (
-                  <Card key={page.id} className="p-6 hover:shadow-lg transition-shadow duration-200">
+                  <Card key={page.id} className={`p-6 hover:shadow-lg transition-shadow duration-200 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center">
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isDarkMode ? 'bg-gradient-to-r from-blue-800 to-indigo-800' : 'bg-gradient-to-r from-blue-100 to-indigo-100'}`}>
                           <Globe className="w-5 h-5 text-blue-600" />
                         </div>
                         <div>
-                          <h3 className="font-bold text-gray-900">{page.name}</h3>
-                          <p className="text-xs text-gray-500">{page.template}</p>
+                          <h3 className={`font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{page.name}</h3>
+                          <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{page.template}</p>
                         </div>
                       </div>
                       <Badge 
@@ -531,8 +555,8 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                     </div>
                     
                     <div className="space-y-2 mb-6">
-                      <p className="text-sm font-medium text-gray-600">{page.url}</p>
-                      <p className="text-xs text-gray-400">
+                      <p className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{page.url}</p>
+                      <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-400'}`}>
                         Created: {new Date(page.createdAt).toLocaleDateString()}
                       </p>
                     </div>
@@ -545,7 +569,16 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                         <ExternalLink className="w-4 h-4" />
                         Visit
                       </button>
-                      <button className="px-4 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center">
+                      <button 
+                        onClick={() => {
+                          // Switch to templates tab and pre-fill form with page data
+                          setSelectedTemplate(templates.find(t => t.name === page.template) || null)
+                          setNewPageUrl(`${page.name}-v2`)
+                          const templatesTab = document.querySelector('[value="templates"]') as HTMLButtonElement
+                          templatesTab?.click()
+                        }}
+                        className={`px-4 py-3 border font-medium rounded-lg transition-colors flex items-center justify-center ${isDarkMode ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'}`}
+                      >
                         <Edit3 className="w-4 h-4" />
                       </button>
                       <button 
@@ -558,13 +591,19 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                 ))}
               </div>
             ) : (
-              <Card className="p-12 text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Card className={`p-12 text-center ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${isDarkMode ? 'bg-gradient-to-r from-gray-700 to-gray-600' : 'bg-gradient-to-r from-gray-100 to-gray-200'}`}>
                   <Globe className="w-8 h-8 text-gray-400" />
                 </div>
-                <p className="text-gray-500 mb-2">No pages deployed yet</p>
-                <p className="text-sm text-gray-400 mb-6">Create your first page from the Templates tab</p>
-                <button className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 flex items-center gap-2 mx-auto">
+                <p className={`mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>No pages deployed yet</p>
+                <p className={`text-sm mb-6 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Create your first page from the Templates tab</p>
+                <button 
+                  onClick={() => {
+                    const templatesTab = document.querySelector('[value="templates"]') as HTMLButtonElement
+                    templatesTab?.click()
+                  }}
+                  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 flex items-center gap-2 mx-auto"
+                >
                   <ArrowRight className="w-4 h-4" />
                   Get Started
                 </button>
@@ -574,45 +613,51 @@ export default function ${newPageUrl || 'YourPage'}Page() {
 
           <TabsContent value="settings" className="space-y-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Settings</h2>
-              <p className="text-gray-600">Configure your template system</p>
+              <h2 className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Settings</h2>
+              <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Configure your template system</p>
             </div>
             
             <div className="max-w-4xl space-y-6">
-              <Card className="p-6">
-                <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <Card className={`p-6 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                <h3 className={`font-bold mb-4 flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   <Database className="w-5 h-5" />
                   Deployment Configuration
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Vercel Project</label>
+                    <label className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Vercel Project</label>
                     <input
                       type="text"
-                      defaultValue="url1234-main"
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      value={settings.vercelProject}
+                      onChange={(e) => handleSettingChange('vercelProject', e.target.value)}
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Production Domain</label>
+                    <label className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Production Domain</label>
                     <input
                       type="text"
-                      defaultValue="url1234.com"
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                      value={settings.productionDomain}
+                      onChange={(e) => handleSettingChange('productionDomain', e.target.value)}
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
                     />
                   </div>
                 </div>
               </Card>
 
-              <Card className="p-6">
-                <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <Card className={`p-6 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                <h3 className={`font-bold mb-4 flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   <Settings className="w-5 h-5" />
                   API Integration
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Database Provider</label>
-                    <select className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                    <label className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Database Provider</label>
+                    <select 
+                      value={settings.databaseProvider}
+                      onChange={(e) => handleSettingChange('databaseProvider', e.target.value)}
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
+                    >
                       <option>PostgreSQL (Supabase)</option>
                       <option>MySQL (PlanetScale)</option>
                       <option>MongoDB (Atlas)</option>
@@ -620,8 +665,12 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Authentication Provider</label>
-                    <select className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                    <label className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Authentication Provider</label>
+                    <select 
+                      value={settings.authProvider}
+                      onChange={(e) => handleSettingChange('authProvider', e.target.value)}
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
+                    >
                       <option>NextAuth.js</option>
                       <option>Clerk</option>
                       <option>Auth0</option>
@@ -632,8 +681,22 @@ export default function ${newPageUrl || 'YourPage'}Page() {
               </Card>
 
               <div className="flex justify-end">
-                <button className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg">
-                  Save Settings
+                <button 
+                  onClick={handleSaveSettings}
+                  className={`px-6 py-3 font-semibold rounded-lg transition-all duration-200 shadow-lg flex items-center gap-2 ${
+                    settingsSaved 
+                      ? 'bg-green-600 hover:bg-green-700 text-white' 
+                      : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700'
+                  }`}
+                >
+                  {settingsSaved ? (
+                    <>
+                      <Check className="w-5 h-5" />
+                      Settings Saved!
+                    </>
+                  ) : (
+                    'Save Settings'
+                  )}
                 </button>
               </div>
             </div>
