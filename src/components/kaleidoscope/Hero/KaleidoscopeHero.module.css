@@ -1,0 +1,207 @@
+/* KaleidoscopeHero.module.css - PRD Compliant */
+
+.heroContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #e2e8f0 100%);
+  overflow: hidden;
+  z-index: 10;
+}
+
+.canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(100%, 100vh * 16/9);
+  height: min(100%, 100vw * 9/16);
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+  contain: layout style paint;
+  z-index: 1;
+}
+
+.heroContent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  text-align: center;
+  color: var(--text-primary);
+  max-width: 1200px;
+  padding: 0 2rem;
+  opacity: 0;
+  animation: fadeIn 2s ease-out forwards;
+}
+
+.heroTitle {
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: clamp(4rem, 12vw, 8rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 2rem;
+  line-height: 0.9;
+  color: rgba(255, 255, 255, 0.7);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  text-transform: lowercase;
+  display: block;
+}
+
+.heroSubtitle {
+  font-family: 'Inter', 'system-ui', sans-serif;
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  font-weight: 400;
+  opacity: 0.8;
+  letter-spacing: 0.01em;
+  line-height: 1.5;
+  max-width: 800px;
+  margin: 0 auto;
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.heroCTA {
+  margin-top: 3rem;
+}
+
+.heroCTA button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 1.25rem 3rem;
+  border-radius: 50px;
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: none;
+}
+
+.heroCTA button:hover {
+  background: var(--secondary);
+  color: var(--background);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(91, 44, 250, 0.3);
+}
+
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translate(-50%, -50%) translateY(30px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translate(-50%, -50%) translateY(0); 
+  }
+}
+
+/* Control Panel */
+.controls {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 16px;
+  color: white;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  z-index: 100;
+  min-width: 200px;
+}
+
+.controls.minimized {
+  padding: 8px;
+  min-width: auto;
+}
+
+.controls.minimized .controlGroup {
+  display: none;
+}
+
+.toggleControls {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.controlGroup {
+  margin-bottom: 12px;
+}
+
+.controlGroup:last-child {
+  margin-bottom: 0;
+}
+
+.controlGroup label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.controlGroup input[type="range"] {
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.controlGroup button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 4px;
+  transition: background-color 0.2s;
+}
+
+.controlGroup button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 768px) {
+  .heroContainer {
+    padding: 0 1rem;
+  }
+  
+  .heroTitle {
+    font-size: clamp(2.5rem, 10vw, 4rem);
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.02em;
+  }
+  
+  .heroSubtitle {
+    font-size: clamp(1rem, 4vw, 1.25rem);
+    margin-bottom: 2rem;
+  }
+  
+  .heroCTA button {
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+  }
+  
+  .controls {
+    top: 10px;
+    right: 10px;
+    font-size: 12px;
+    min-width: 160px;
+  }
+}
