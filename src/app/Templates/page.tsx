@@ -186,8 +186,14 @@ export default function TemplateManagerPage() {
         const updatedPages = deployedPages.filter(p => p.id !== pageId)
         setDeployedPages(updatedPages)
         localStorage.setItem('deployedPages', JSON.stringify(updatedPages))
+      } else if (response.status === 404) {
+        // Page doesn't exist on server, but remove from local storage anyway
+        const updatedPages = deployedPages.filter(p => p.id !== pageId)
+        setDeployedPages(updatedPages)
+        localStorage.setItem('deployedPages', JSON.stringify(updatedPages))
       } else {
-        alert('Failed to delete page. Please try again.')
+        const errorData = await response.json().catch(() => ({}))
+        alert(`Failed to delete page: ${errorData.error || 'Unknown error'}`)
       }
     } catch (error) {
       console.error('Error deleting page:', error)
