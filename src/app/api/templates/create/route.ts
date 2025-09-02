@@ -136,8 +136,8 @@ import {
 } from '@/components/template/sections'
 
 export default function Page() {
-  const features = ${JSON.stringify((features as any[]).length > 0 ? features : defaultFeatures, null, 2)}
-  const testimonials = ${JSON.stringify((testimonials as any[]).length > 0 ? testimonials : defaultTestimonials, null, 2)}
+  const features = ${JSON.stringify(Array.isArray(features) && features.length > 0 ? features : defaultFeatures, null, 2)}
+  const testimonials = ${JSON.stringify(Array.isArray(testimonials) && testimonials.length > 0 ? testimonials : defaultTestimonials, null, 2)}
 
   return (
     <LandingPageTemplate>
