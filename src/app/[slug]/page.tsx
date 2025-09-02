@@ -19,24 +19,34 @@ interface PageData {
     subtitle?: string
     description?: string
     companyName?: string
-    features?: any[]
-    testimonials?: any[]
+    features?: Array<{title: string; description: string}>
+    testimonials?: Array<{name: string; content: string; role: string; rating: number}>
   }
   createdAt: string
   lastModified: string
 }
 
-export default function DynamicPage({ params }: { params: { slug: string } }) {
+export default function DynamicPage({ params }: { params: Promise<{ slug: string }> }) {
   const [pageData, setPageData] = useState<PageData | null>(null)
   const [loading, setLoading] = useState(true)
   const [notFoundPage, setNotFoundPage] = useState(false)
+  const [slug, setSlug] = useState<string>('')
 
   useEffect(() => {
+    params.then((resolvedParams) => {
+      setSlug(resolvedParams.slug)
+    })
+  }, [params])
+
+  useEffect(() => {
+    if (!slug) return
+    
+    // Check if this page exists
     // First check if we have the full page configuration
     const pageConfigs = localStorage.getItem('pageConfigurations')
     if (pageConfigs) {
       const configs = JSON.parse(pageConfigs)
-      const config = configs[params.slug]
+      const config = configs[slug]
       if (config) {
         setPageData(config)
         setLoading(false)
@@ -48,12 +58,12 @@ export default function DynamicPage({ params }: { params: { slug: string } }) {
     const savedPages = localStorage.getItem('deployedPages')
     if (savedPages) {
       const pages = JSON.parse(savedPages)
-      const page = pages.find((p: any) => p.name === params.slug)
+      const page = pages.find((p: {name: string; template: string; createdAt: string}) => p.name === slug)
       if (page) {
         // Create fallback page data
         setPageData({
           templateId: 'hero-landing',
-          pageName: params.slug,
+          pageName: slug,
           configuration: {
             title: page.template + ' Page',
             subtitle: 'Created with Template Manager',
@@ -71,7 +81,7 @@ export default function DynamicPage({ params }: { params: { slug: string } }) {
     // If not found anywhere, show 404
     setNotFoundPage(true)
     setLoading(false)
-  }, [params.slug])
+  }, [slug])
 
   if (loading) {
     return (
