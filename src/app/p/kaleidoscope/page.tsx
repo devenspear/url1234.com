@@ -1,153 +1,66 @@
 'use client'
 
-import { LandingPageTemplate } from '@/components/template/LandingPageTemplate'
-import {
-  HeroSection,
-  FeaturesSection,
-  TestimonialsSection,
-  CTASection,
-  FooterSection
-} from '@/components/template/sections'
-import { Heart, Brain, Users, Sparkles } from 'lucide-react'
+import { Inter, Playfair_Display } from 'next/font/google';
+import '../../../styles/kaleidoscope.css';
+import KaleidoscopeHero from '../../../components/kaleidoscope/Hero/KaleidoscopeHero';
+import AboutSection from '../../../components/kaleidoscope/sections/AboutSection';
+import ProblemSection from '../../../components/kaleidoscope/sections/ProblemSection';
+import ApproachSection from '../../../components/kaleidoscope/sections/ApproachSection';
+import MethodSection from '../../../components/kaleidoscope/sections/MethodSection';
+import TestimonialSection from '../../../components/kaleidoscope/sections/TestimonialSection';
+import CTASection from '../../../components/kaleidoscope/sections/CTASection';
+import BookSection from '../../../components/kaleidoscope/sections/BookSection';
+import Footer from '../../../components/kaleidoscope/shared/Footer';
+
+const inter = Inter({ subsets: ['latin'] });
+const playfair = Playfair_Display({ subsets: ['latin'] });
 
 export default function KaleidoscopePage() {
-  const features = [
-    {
-      title: 'Holistic Healing',
-      description: 'Addressing the whole person - mind, body, and spirit for complete transformation',
-      icon: Heart
-    },
-    {
-      title: 'Science-Based Approach',
-      description: 'Evidence-based methodologies combined with ancient wisdom for optimal results',
-      icon: Brain
-    },
-    {
-      title: 'Community Support',
-      description: 'Join a supportive community of individuals on their healing journey',
-      icon: Users
-    },
-    {
-      title: 'Personalized Methods',
-      description: 'Tailored approaches that adapt to your unique needs and circumstances',
-      icon: Sparkles
-    }
-  ]
-
-  const testimonials = [
-    {
-      name: 'Sarah M.',
-      role: 'Client',
-      content: 'The kaleidoscope method completely transformed my approach to healing. I found clarity I never thought possible.',
-      rating: 5
-    },
-    {
-      name: 'Michael R.',
-      role: 'Participant',
-      content: 'After years of searching, I finally found a method that addresses all aspects of wellness. Truly life-changing.',
-      rating: 5
-    },
-    {
-      name: 'Lisa K.',
-      role: 'Student',
-      content: 'The personalized approach made all the difference. I felt heard, understood, and genuinely supported.',
-      rating: 5
-    }
-  ]
-
-  const footerColumns = [
-    {
-      title: 'Services',
-      links: [
-        { label: 'Individual Sessions', href: '#sessions' },
-        { label: 'Group Programs', href: '#programs' },
-        { label: 'Workshops', href: '#workshops' }
-      ]
-    },
-    {
-      title: 'Resources',
-      links: [
-        { label: 'About the Method', href: '#method' },
-        { label: 'Success Stories', href: '#testimonials' },
-        { label: 'FAQ', href: '#faq' }
-      ]
-    },
-    {
-      title: 'Connect',
-      links: [
-        { label: 'Book Consultation', href: '#booking' },
-        { label: 'Contact Us', href: '#contact' },
-        { label: 'Newsletter', href: '#newsletter' }
-      ]
-    }
-  ]
-
   return (
-    <LandingPageTemplate>
-      <HeroSection
-        title="Kaleidoscope Healing Method"
-        subtitle="Transform Your Life"
-        description="Discover a revolutionary approach to healing that addresses mind, body, and spirit through personalized, science-based methodologies"
-        primaryCTA={{
-          text: 'Start Your Journey',
-          onClick: () => window.open('#contact', '_self')
-        }}
-        secondaryCTA={{
-          text: 'Learn More',
-          onClick: () => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
-        }}
-        height="full"
-        alignment="center"
-        backgroundImage="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop"
-        overlay={true}
-      />
-
-      <FeaturesSection
-        title="Why Choose Kaleidoscope?"
-        subtitle="A Comprehensive Approach to Healing"
-        features={features}
-        columns={4}
-        variant="cards"
-      />
-
-      <CTASection
-        title="Ready to Transform Your Life?"
-        description="Take the first step towards holistic healing and personal transformation"
-        primaryCTA={{
-          text: 'Book Free Consultation',
-          onClick: () => window.open('mailto:hello@kaleidoscopehealing.com?subject=Free Consultation Request', '_blank')
-        }}
-        variant="gradient"
-      />
-
-      <TestimonialsSection
-        title="What Our Clients Say"
-        subtitle="Real Stories of Transformation"
-        testimonials={testimonials}
-        columns={3}
-        variant="cards"
-      />
-
-      <CTASection
-        title="Begin Your Healing Journey Today"
-        description="Join thousands who have discovered the power of the Kaleidoscope Method"
-        primaryCTA={{
-          text: 'Get Started Now',
-          onClick: () => window.open('#contact', '_self')
-        }}
-        secondaryCTA={{
-          text: 'Download Free Guide',
-          onClick: () => window.open('/kaleidoscope-guide.pdf', '_blank')
-        }}
-        variant="centered"
-      />
-
-      <FooterSection
-        companyName="Kaleidoscope Healing"
-        tagline="Transforming lives through holistic healing"
-        columns={footerColumns}
-        backgroundColor="dark"
-      />
-    </LandingPageTemplate>
-  )
+    <div className={`${inter.className} overflow-x-hidden`} style={{ 
+      fontFamily: `${inter.style.fontFamily}, ${playfair.style.fontFamily}` 
+    }}>
+      {/* Hero Section - 16:9 Aspect Ratio */}
+      <section id="hero" className="w-full aspect-video relative">
+        <KaleidoscopeHero 
+          title="kaleidoscope"
+          subtitle="A radical recovery solution for those ready to be free from drinking and the pain beneath it"
+          showControls={true}
+        />
+      </section>
+      
+      {/* Main Content Sections */}
+      <main className="w-full">
+        <div id="about" className="w-full">
+          <AboutSection />
+        </div>
+        
+        <div id="problem" className="w-full">
+          <ProblemSection />
+        </div>
+        
+        <div id="approach" className="w-full">
+          <ApproachSection />
+        </div>
+        
+        <div id="method" className="w-full">
+          <MethodSection />
+        </div>
+        
+        <div id="testimonial" className="w-full">
+          <TestimonialSection />
+        </div>
+        
+        <div id="cta" className="w-full">
+          <CTASection />
+        </div>
+        
+        <div id="book" className="w-full">
+          <BookSection />
+        </div>
+      </main>
+      
+      <Footer />
+    </div>
+  );
 }

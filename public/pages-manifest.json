@@ -63,10 +63,15 @@
       "id": "kaleidoscope",
       "name": "kaleidoscope",
       "url": "/p/kaleidoscope",
-      "template": "unknown",
+      "template": "custom",
       "createdAt": "2025-09-02T18:36:56.767Z",
-      "lastModified": "2025-09-02T18:36:56.767Z",
-      "configuration": {}
+      "lastModified": "2025-09-03T01:25:00.000Z",
+      "configuration": {
+        "title": "Kaleidoscope Recovery",
+        "subtitle": "A Radical Recovery Solution",
+        "description": "A radical recovery solution for those ready to be free from drinking and the pain beneath it",
+        "companyName": "Kaleidoscope Recovery"
+      }
     },
     {
       "id": "template-home",
