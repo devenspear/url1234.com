@@ -8,18 +8,31 @@ export async function GET() {
     const pagesDir = path.join(projectRoot, 'src', 'app', 'p')
     
     // Check if p directory exists
+    let entries
     try {
       await fs.access(pagesDir)
+      // Read all directories in src/app/p
+      entries = await fs.readdir(pagesDir, { withFileTypes: true })
     } catch {
-      // p directory doesn't exist yet, return empty list
+      // In serverless environments or when p directory doesn't exist
+      // Fall back to known pages from static generation
+      const knownPages = ['doghouse', 'workflow-test', 'real-test-page', 'alysbeach', 'template-example', 'kaleidoscope', 'template-home']
+      const pages = knownPages.map(name => ({
+        id: name,
+        name: name,
+        url: `https://url1234.com/p/${name}`,
+        template: 'unknown',
+        createdAt: new Date().toISOString(),
+        lastModified: new Date().toISOString(),
+        status: 'live' as const,
+        configuration: {}
+      }))
+      
       return NextResponse.json({
         success: true,
-        pages: []
+        pages: pages.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
       })
     }
-    
-    // Read all directories in src/app/p
-    const entries = await fs.readdir(pagesDir, { withFileTypes: true })
     
     const pages = []
     
