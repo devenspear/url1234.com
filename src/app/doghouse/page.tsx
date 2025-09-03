@@ -42,7 +42,7 @@ export default function Page() {
   return (
     <LandingPageTemplate>
       <HeroSection
-        title="Hero Landing Page"
+        title="Doghouse Demo"
         subtitle="Created with Template Manager"
         description="A page created using the Hero Landing template"
         primaryCTA={{
