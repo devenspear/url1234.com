@@ -18,11 +18,8 @@ interface Manifest {
 
 export async function GET() {
   try {
-    // In production, fetch the manifest from the public URL
-    // In development, we can also use this approach for consistency
-    const baseUrl = process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}`
-      : process.env.NODE_ENV === 'production'
+    // Always use the canonical URL in production
+    const baseUrl = process.env.NODE_ENV === 'production'
       ? 'https://url1234.com'
       : 'http://localhost:3004'
     
