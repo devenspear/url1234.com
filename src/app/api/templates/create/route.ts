@@ -25,8 +25,23 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Sanitize page name
+    // Check if page name has uppercase characters
+    if (pageName !== pageName.toLowerCase()) {
+      return NextResponse.json(
+        { error: 'Page name must be lowercase only' },
+        { status: 400 }
+      )
+    }
+
+    // Sanitize page name (remove non-alphanumeric and non-dash characters)
     const sanitizedPageName = pageName.toLowerCase().replace(/[^a-z0-9-]/g, '')
+    
+    if (sanitizedPageName !== pageName) {
+      return NextResponse.json(
+        { error: 'Page name can only contain lowercase letters, numbers, and dashes' },
+        { status: 400 }
+      )
+    }
 
     // Check if running in development
     const isDevelopment = process.env.NODE_ENV === 'development' || process.env.VERCEL !== '1'
@@ -49,10 +64,24 @@ export async function POST(request: NextRequest) {
     const projectRoot = process.cwd()
     const pageDir = path.join(projectRoot, 'src', 'app', sanitizedPageName)
     
+    // Check if page already exists
+    try {
+      await fs.access(pageDir)
+      return NextResponse.json(
+        { error: `Page "${sanitizedPageName}" already exists. Choose a different name.` },
+        { status: 409 }
+      )
+    } catch {
+      // Directory doesn't exist, which is what we want
+    }
+    
     try {
       await fs.mkdir(pageDir, { recursive: true })
     } catch (error) {
-      console.log('Directory might already exist, continuing...')
+      return NextResponse.json(
+        { error: 'Failed to create page directory' },
+        { status: 500 }
+      )
     }
 
     // Write the page file
