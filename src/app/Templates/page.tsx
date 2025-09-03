@@ -5,7 +5,6 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { 
   Layout, 
-  Plus, 
   Eye, 
   Code, 
   Settings, 
@@ -20,12 +19,10 @@ import {
   Edit3,
   Zap,
   Palette,
-  Layers,
   ArrowRight,
   Moon,
   Sun,
-  FileText,
-  Home
+  FileText
 } from 'lucide-react'
 
 interface Template {
