@@ -1,0 +1,12 @@
+{
+  "templateId": "hero-landing",
+  "pageName": "doghouse",
+  "configuration": {
+    "title": "Hero Landing Page",
+    "subtitle": "Created with Template Manager",
+    "description": "A page created using the Hero Landing template",
+    "companyName": "Your Company"
+  },
+  "createdAt": "2025-09-03T00:11:56.530Z",
+  "lastModified": "2025-09-03T00:11:56.530Z"
+}
