@@ -555,7 +555,7 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                     <div className="flex gap-2">
                       <button 
                         className="flex-1 px-4 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
-                        onClick={() => window.open(`/${page.name}`, '_blank')}
+                        onClick={() => window.open(`/p/${page.name}`, '_blank')}
                       >
                         <ExternalLink className="w-4 h-4" />
                         Visit

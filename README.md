@@ -75,14 +75,14 @@ url1234-templates/
 ├── src/app/
 │   ├── page.tsx                    # Homepage (black gradient "Hello World")
 │   ├── templates/page.tsx          # Template Manager UI
-│   ├── [slug]/page.tsx            # Dynamic route for generated pages
+│   ├── p/[slug]/page.tsx          # Dynamic route for generated pages
+│   ├── p/[generated-page-name]/   # Generated page directories
+│   │   ├── page.tsx               # Page component
+│   │   └── metadata.json          # Creation metadata
 │   ├── api/templates/create/       # Page creation API
 │   ├── api/pages/list/            # Page listing API  
 │   ├── api/pages/delete/          # Page deletion API
 │   ├── debug/                     # Route debugging API
-│   ├── [generated-page-name]/     # Generated page directories
-│   │   ├── page.tsx               # Page component
-│   │   └── metadata.json          # Creation metadata
 ├── src/components/template/        # Template components
 │   ├── LandingPageTemplate.tsx
 │   └── sections/                  # Reusable sections
@@ -101,7 +101,7 @@ npm run build
 
 # Access locally
 http://localhost:3002/templates      # Template Manager
-http://localhost:3002/[page-name]   # Generated pages
+http://localhost:3002/p/[page-name] # Generated pages
 http://localhost:3002/debug         # Route debugging
 ```
 
@@ -136,14 +136,14 @@ http://localhost:3002/debug         # Route debugging
 ## Error Prevention & Debugging
 
 ### 404 Error Protection
-- **Route Exclusion**: Dynamic route excludes system pages (`templates`, `api`, `admin`)
+- **Route Separation**: Dynamic routes moved to `/p/[slug]` to prevent conflicts with static routes  
 - **Debug Endpoint**: `/debug` provides route analysis and troubleshooting
 - **Validation**: Comprehensive input validation prevents invalid pages
 
 ### Common Issues & Solutions
 
 **Problem**: Templates page shows 404  
-**Solution**: Check `/debug` endpoint, ensure `templates/page.tsx` exists
+**Solution**: ✅ RESOLVED - Dynamic routes moved to `/p/[slug]` to prevent conflicts
 
 **Problem**: Page creation fails  
 **Solution**: Must run locally (development mode), not on Vercel
@@ -221,6 +221,13 @@ http://localhost:3002/debug         # Route debugging
 
 The template manager is fully functional and production-ready for single-user workflows. All core features are implemented and tested. The system successfully generates real pages, integrates with git, and deploys to production.
 
+### Recent Updates (September 2025)
+- ✅ **MAJOR FIX**: Resolved persistent 404 errors on `/templates` page
+- ✅ **Route Restructure**: Moved dynamic routes to `/p/[slug]` to prevent conflicts with static routes
+- ✅ **URL Updates**: Generated pages now accessible at `url1234.com/p/[pagename]` instead of `url1234.com/[pagename]`
+- ✅ **API Updates**: All APIs updated to work with new routing structure
+- ✅ **Error Prevention**: Comprehensive routing conflict prevention implemented
+
 **Last Updated**: September 2025  
-**Version**: 2.0 (Production Ready)  
+**Version**: 2.1 (Routing Issues Resolved)  
 **Next Session**: Use this README to quickly understand project status and continue development.

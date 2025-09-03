@@ -60,9 +60,9 @@ export async function POST(request: NextRequest) {
     // Get template content
     const templateContent = await getTemplateContent(templateId, configuration)
     
-    // Create the page directory
+    // Create the page directory in the p subdirectory
     const projectRoot = process.cwd()
-    const pageDir = path.join(projectRoot, 'src', 'app', sanitizedPageName)
+    const pageDir = path.join(projectRoot, 'src', 'app', 'p', sanitizedPageName)
     
     // Check if page already exists
     try {
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
     // Auto-commit and push the changes
     try {
       // Add the new files
-      await execAsync(`cd "${projectRoot}" && git add "src/app/${sanitizedPageName}/"`)
+      await execAsync(`cd "${projectRoot}" && git add "src/app/p/${sanitizedPageName}/"`)
       
       // Commit with a descriptive message
       const commitMessage = `Generated page: ${sanitizedPageName} using ${templateId} template`
@@ -122,12 +122,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       pageName: sanitizedPageName,
-      url: `/${sanitizedPageName}`,
+      url: `/p/${sanitizedPageName}`,
       metadata,
       deployed: true,
-      deploymentUrl: `https://url1234.com/${sanitizedPageName}`,
+      deploymentUrl: `https://url1234.com/p/${sanitizedPageName}`,
       message: 'Page created and committed to GitHub successfully',
-      filePath: `src/app/${sanitizedPageName}/page.tsx`
+      filePath: `src/app/p/${sanitizedPageName}/page.tsx`
     })
     
   } catch (error) {

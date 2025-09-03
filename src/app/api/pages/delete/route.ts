@@ -29,7 +29,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const projectRoot = process.cwd()
-    const pageDir = path.join(projectRoot, 'src', 'app', pageName)
+    const pageDir = path.join(projectRoot, 'src', 'app', 'p', pageName)
     
     // Check if the directory exists
     try {

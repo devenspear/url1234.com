@@ -5,10 +5,21 @@ import path from 'path'
 export async function GET() {
   try {
     const projectRoot = process.cwd()
-    const appDir = path.join(projectRoot, 'src', 'app')
+    const pagesDir = path.join(projectRoot, 'src', 'app', 'p')
     
-    // Read all directories in src/app
-    const entries = await fs.readdir(appDir, { withFileTypes: true })
+    // Check if p directory exists
+    try {
+      await fs.access(pagesDir)
+    } catch {
+      // p directory doesn't exist yet, return empty list
+      return NextResponse.json({
+        success: true,
+        pages: []
+      })
+    }
+    
+    // Read all directories in src/app/p
+    const entries = await fs.readdir(pagesDir, { withFileTypes: true })
     
     const pages = []
     
@@ -19,7 +30,7 @@ export async function GET() {
           continue
         }
         
-        const pageDir = path.join(appDir, entry.name)
+        const pageDir = path.join(pagesDir, entry.name)
         
         try {
           // Check if it has a page.tsx file
@@ -47,7 +58,7 @@ export async function GET() {
           pages.push({
             id: entry.name,
             name: entry.name,
-            url: `https://url1234.com/${entry.name}`,
+            url: `https://url1234.com/p/${entry.name}`,
             template: metadata.templateId || 'Unknown Template',
             createdAt: metadata.createdAt,
             lastModified: metadata.lastModified,
