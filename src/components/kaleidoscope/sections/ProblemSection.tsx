@@ -79,7 +79,7 @@ const ProblemSection: React.FC = () => {
           className="text-center p-8 rounded-2xl bg-gradient-to-r from-primary/20 to-secondary/20 border border-primary/30"
         >
           <p className="text-xl text-text-secondary max-w-3xl mx-auto leading-relaxed">
-            The industry treats people who are not ready , fails to facilitate actual healing, and then releases them into their old environment. It doesn't have to be this way.
+            The industry treats people who are not ready , fails to facilitate actual healing, and then releases them into their old environment. It doesn&apos;t have to be this way.
           </p>
         </motion.div>
       </div>

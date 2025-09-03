@@ -28,12 +28,12 @@ const ApproachSection: React.FC = () => {
         >
           <div className="text-lg text-text-secondary leading-relaxed mb-8">
             <p>
-              Kaleidoscope was born from personal truth. After decades of personal and professional experiences with failed treatments and hollow promises, our founder realized what others won't say: alcoholism isn't a disease. It's a response to pain. And the pain can be extinguished. We only work with people who are truly ready - those willing to do whatever it takes to stop drinking and start living. When they are, we never let go.
+              Kaleidoscope was born from personal truth. After decades of personal and professional experiences with failed treatments and hollow promises, our founder realized what others won&apos;t say: alcoholism isn&apos;t a disease. It&apos;s a response to pain. And the pain can be extinguished. We only work with people who are truly ready - those willing to do whatever it takes to stop drinking and start living. When they are, we never let go.
             </p>
           </div>
           
           <div className="mt-12 text-sm text-text-secondary space-y-2 text-right italic">
-            <p>1. Understanding Alcohol's Adverse Impact on Health (NIH, 2025)</p>
+            <p>1. Understanding Alcohol&apos;s Adverse Impact on Health (NIH, 2025)</p>
             <p>2. AA critiques (Dodes, 2006)</p>
           </div>
         </motion.div>

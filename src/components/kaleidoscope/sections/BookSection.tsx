@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Download, ExternalLink, Play } from 'lucide-react';
+import { Download, Play } from 'lucide-react';
 
 const VideoPlaceholder = ({ title }: { title: string }) => (
   <div className="relative aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-primary/20 to-secondary/20 border border-white/10 mb-8">
@@ -48,7 +48,7 @@ const BookSection: React.FC = () => {
           <VideoPlaceholder title="Video: Smashed: Sober (with a twist)" />
           
           <h3 className="text-2xl md:text-3xl font-light text-text-primary mb-8">
-            It's Not About Not Drinking, It's About Not Wanting To.
+            It&apos;s Not About Not Drinking, It&apos;s About Not Wanting To.
           </h3>
 
           <div className="flex justify-center">

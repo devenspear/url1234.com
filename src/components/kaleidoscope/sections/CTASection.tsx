@@ -6,7 +6,6 @@ import { Mail, Phone, CheckCircle, ArrowRight } from 'lucide-react';
 
 const CTASection: React.FC = () => {
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -41,7 +40,7 @@ const CTASection: React.FC = () => {
             </div>
             
             <h2 className="text-4xl md:text-6xl font-light text-white mb-6">
-              You're One Step Closer
+              You&apos;re One Step Closer
             </h2>
             
             <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
@@ -103,7 +102,7 @@ const CTASection: React.FC = () => {
             Are You Ready?
           </h2>
           <p className="text-xl text-text-secondary max-w-3xl mx-auto leading-relaxed mb-8">
-            Stay informed as the Kaleidoscope movement grows—sign up and we'll share updates, stories, and moments that matter.
+            Stay informed as the Kaleidoscope movement grows—sign up and we&apos;ll share updates, stories, and moments that matter.
           </p>
           
           <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-8 mb-12">

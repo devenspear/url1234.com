@@ -65,13 +65,13 @@ const AboutSection: React.FC = () => {
                 >
                   <div className="flex items-start">
                     <div className="w-3 h-3 bg-primary rounded-full mr-4 mt-2 flex-shrink-0" />
-                    <span>Not 12 steps, 1 transformative truth: The answers are already inside you. If you're truly ready, let's go find them together.</span>
+                    <span>Not 12 steps, 1 transformative truth: The answers are already inside you. If you&apos;re truly ready, let&apos;s go find them together.</span>
                   </div>
                 </motion.div>
               </div>
               
               <p className="mt-6">
-                Kaleidoscope delivers complete personal transformation for alcoholics and their loved ones. We don't just treat symptoms - we eliminate pain at the source and permanently support each soul's unique healing journey. It's not about not drinking; it's about not even wanting to.
+                Kaleidoscope delivers complete personal transformation for alcoholics and their loved ones. We don&apos;t just treat symptoms - we eliminate pain at the source and permanently support each soul&apos;s unique healing journey. It&apos;s not about not drinking; it&apos;s about not even wanting to.
               </p>
             </div>
           </motion.div>

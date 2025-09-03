@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
 
@@ -13,7 +13,6 @@ interface Phase {
 }
 
 const MethodSection: React.FC = () => {
-  const [activePhase, setActivePhase] = useState<number>(1);
 
   const phases: Phase[] = [
     {
