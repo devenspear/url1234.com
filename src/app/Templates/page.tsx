@@ -17,7 +17,6 @@ import {
   ExternalLink,
   Trash2,
   Edit3,
-  Zap,
   Palette,
   ArrowRight,
   Moon,
