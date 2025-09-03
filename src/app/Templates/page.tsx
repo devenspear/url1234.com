@@ -286,16 +286,13 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                 <span className="font-medium">{item.label}</span>
               </div>
               {item.count !== undefined && (
-                <Badge 
-                  variant="secondary" 
-                  className={`text-xs ${
-                    activeTab === item.id 
-                      ? 'bg-white/20 text-white' 
-                      : isDarkMode ? 'bg-gray-600 text-gray-300' : 'bg-gray-200 text-gray-600'
-                  }`}
-                >
+                <div className={`px-3 py-1 rounded-lg font-bold text-lg ${
+                  activeTab === item.id 
+                    ? 'bg-white/20 text-white' 
+                    : isDarkMode ? 'bg-gray-600 text-gray-200' : 'bg-gray-200 text-gray-700'
+                }`}>
                   {item.count}
-                </Badge>
+                </div>
               )}
             </button>
           ))}
@@ -305,7 +302,7 @@ export default function ${newPageUrl || 'YourPage'}Page() {
         <div className="absolute bottom-4 left-4 right-4">
           <button
             onClick={() => setIsDarkMode(!isDarkMode)}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
               isDarkMode 
                 ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -338,25 +335,6 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                 </p>
               </div>
               
-              {/* Stats Cards in Header */}
-              <div className="flex gap-4">
-                <div className={`px-4 py-2 rounded-lg border ${isDarkMode ? 'bg-blue-900/20 border-blue-700' : 'bg-blue-50 border-blue-200'}`}>
-                  <div className="flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-blue-600" />
-                    <span className={`text-sm font-medium ${isDarkMode ? 'text-blue-300' : 'text-blue-900'}`}>
-                      {templates.length} Templates
-                    </span>
-                  </div>
-                </div>
-                <div className={`px-4 py-2 rounded-lg border ${isDarkMode ? 'bg-green-900/20 border-green-700' : 'bg-green-50 border-green-200'}`}>
-                  <div className="flex items-center gap-2">
-                    <Globe className="w-4 h-4 text-green-600" />
-                    <span className={`text-sm font-medium ${isDarkMode ? 'text-green-300' : 'text-green-900'}`}>
-                      {deployedPages.length} Pages
-                    </span>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -443,7 +421,7 @@ export default function ${newPageUrl || 'YourPage'}Page() {
 
               {/* Configuration Panel */}
               <div className="space-y-6">
-                <Card className={`p-6 space-y-6 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                <Card className={`p-6 space-y-6 ${isDarkMode ? 'bg-gradient-to-br from-indigo-900/30 to-purple-900/30 border-indigo-700/50' : 'bg-gradient-to-br from-blue-50 to-indigo-100 border-blue-200'}`}>
                   <div>
                     <h2 className={`text-xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Create New Page</h2>
                     <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Configure your new landing page</p>
@@ -461,9 +439,9 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                       </div>
 
                       <div>
-                        <label className={`block text-sm font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Page URL</label>
+                        <label className={`block text-sm font-semibold mb-3 ${isDarkMode ? 'text-indigo-200' : 'text-indigo-800'}`}>Page URL</label>
                         <div className="flex items-center space-x-0">
-                          <span className={`px-3 py-3 text-sm rounded-l-xl border border-r-0 ${isDarkMode ? 'bg-gray-700 text-gray-300 border-gray-600' : 'bg-gray-50 text-gray-500 border-gray-300'}`}>
+                          <span className={`px-3 py-3 text-sm rounded-l-xl border border-r-0 ${isDarkMode ? 'bg-gray-700 text-gray-300 border-gray-600' : 'bg-white text-gray-500 border-gray-300'}`}>
                             url1234.com/p/
                           </span>
                           <input
@@ -473,6 +451,24 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                             placeholder="my-landing-page"
                             className={`flex-1 px-4 py-3 border border-l-0 rounded-r-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'}`}
                           />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className={`block text-sm font-semibold mb-3 ${isDarkMode ? 'text-indigo-200' : 'text-indigo-800'}`}>Template Features</label>
+                        <div className="space-y-3 max-h-40 overflow-y-auto">
+                          {selectedTemplate.features.map((feature, i) => (
+                            <label key={i} className="flex items-center gap-3 cursor-pointer group">
+                              <input 
+                                type="checkbox" 
+                                defaultChecked 
+                                className="w-4 h-4 text-blue-600 rounded border-2 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                              />
+                              <span className={`text-sm group-hover:text-blue-600 transition-colors ${isDarkMode ? 'text-indigo-100' : 'text-indigo-700'}`}>
+                                {feature}
+                              </span>
+                            </label>
+                          ))}
                         </div>
                       </div>
 
@@ -515,11 +511,11 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                     </>
                   ) : (
                     <div className="text-center py-12">
-                      <div className="w-16 h-16 bg-gradient-to-r from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Layout className="w-8 h-8 text-gray-400" />
+                      <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${isDarkMode ? 'bg-gradient-to-r from-indigo-800 to-purple-800' : 'bg-gradient-to-r from-blue-100 to-indigo-200'}`}>
+                        <Layout className={`w-8 h-8 ${isDarkMode ? 'text-indigo-300' : 'text-indigo-600'}`} />
                       </div>
-                      <p className="text-gray-500 mb-2">No template selected</p>
-                      <p className="text-sm text-gray-400">Choose a template to get started</p>
+                      <p className={`mb-2 ${isDarkMode ? 'text-indigo-200' : 'text-indigo-700'}`}>No template selected</p>
+                      <p className={`text-sm ${isDarkMode ? 'text-indigo-300' : 'text-indigo-500'}`}>Choose a template to get started</p>
                     </div>
                   )}
                 </Card>
