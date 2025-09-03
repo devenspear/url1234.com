@@ -1,0 +1,95 @@
+{
+  "pages": [
+    {
+      "id": "doghouse",
+      "name": "doghouse",
+      "url": "/p/doghouse",
+      "template": "hero-landing",
+      "createdAt": "2025-09-03T00:11:56.530Z",
+      "lastModified": "2025-09-03T00:11:56.530Z",
+      "configuration": {
+        "title": "Doghouse Demo",
+        "subtitle": "Hero Section",
+        "description": "A page created using the Hero Landing template",
+        "companyName": "Your Company"
+      }
+    },
+    {
+      "id": "workflow-test",
+      "name": "workflow-test",
+      "url": "/p/workflow-test",
+      "template": "simple-landing",
+      "createdAt": "2025-09-03T00:08:31.881Z",
+      "lastModified": "2025-09-03T00:08:31.881Z",
+      "configuration": {
+        "title": "Workflow Test",
+        "description": "Testing the complete workflow",
+        "companyName": "Workflow Co"
+      }
+    },
+    {
+      "id": "real-test-page",
+      "name": "real-test-page",
+      "url": "/p/real-test-page",
+      "template": "hero-landing",
+      "createdAt": "2025-09-03T00:06:42.063Z",
+      "lastModified": "2025-09-03T00:06:42.064Z",
+      "configuration": {
+        "title": "Real Test Page",
+        "subtitle": "Actually Generated",
+        "description": "This page should be a real file",
+        "companyName": "Test Co"
+      }
+    },
+    {
+      "id": "alysbeach",
+      "name": "alysbeach",
+      "url": "/p/alysbeach",
+      "template": "unknown",
+      "createdAt": "2025-09-02T21:14:53.900Z",
+      "lastModified": "2025-09-02T21:14:53.900Z",
+      "configuration": {}
+    },
+    {
+      "id": "template-example",
+      "name": "template-example",
+      "url": "/p/template-example",
+      "template": "unknown",
+      "createdAt": "2025-09-02T18:37:12.873Z",
+      "lastModified": "2025-09-02T18:37:12.873Z",
+      "configuration": {}
+    },
+    {
+      "id": "kaleidoscope",
+      "name": "kaleidoscope",
+      "url": "/p/kaleidoscope",
+      "template": "unknown",
+      "createdAt": "2025-09-02T18:36:56.767Z",
+      "lastModified": "2025-09-02T18:36:56.767Z",
+      "configuration": {}
+    },
+    {
+      "id": "template-home",
+      "name": "template-home",
+      "url": "/p/template-home",
+      "template": "unknown",
+      "createdAt": "2025-09-02T16:32:44.568Z",
+      "lastModified": "2025-09-02T16:32:44.568Z",
+      "configuration": {}
+    },
+    {
+      "id": "test-manifest-page",
+      "name": "test-manifest-page",
+      "url": "/p/test-manifest-page",
+      "template": "simple-landing",
+      "createdAt": "2025-09-03T01:05:57.925Z",
+      "lastModified": "2025-09-03T01:05:57.925Z",
+      "configuration": {
+        "title": "Testing Manifest",
+        "description": "Testing the manifest system",
+        "companyName": "Test Corp"
+      }
+    }
+  ],
+  "lastUpdated": "2025-09-03T01:05:57.925Z"
+}
