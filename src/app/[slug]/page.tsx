@@ -41,6 +41,14 @@ export default function DynamicPage({ params }: { params: Promise<{ slug: string
   useEffect(() => {
     if (!slug) return
     
+    // Exclude system pages that have their own routes
+    const systemPages = ['templates', 'api', 'admin']
+    if (systemPages.includes(slug)) {
+      setNotFoundPage(true)
+      setLoading(false)
+      return
+    }
+    
     // Check if this page exists
     // First check if we have the full page configuration
     const pageConfigs = localStorage.getItem('pageConfigurations')
