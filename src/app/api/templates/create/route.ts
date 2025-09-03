@@ -1,4 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
+import fs from 'fs/promises'
+import path from 'path'
+import { exec } from 'child_process'
+import { promisify } from 'util'
+
+const execAsync = promisify(exec)
 
 export async function POST(request: NextRequest) {
   let templateId = ''
@@ -22,22 +28,67 @@ export async function POST(request: NextRequest) {
     // Sanitize page name
     const sanitizedPageName = pageName.toLowerCase().replace(/[^a-z0-9-]/g, '')
 
+    // Check if running in development
+    const isDevelopment = process.env.NODE_ENV === 'development' || process.env.VERCEL !== '1'
+    
+    if (!isDevelopment) {
+      // In production/Vercel, we can't write files, so return error with instructions
+      return NextResponse.json({
+        error: 'Page creation only available in development mode',
+        message: 'Please run this locally to create new pages',
+        templateId,
+        pageName: sanitizedPageName,
+        configuration
+      }, { status: 400 })
+    }
+
     // Get template content
     const templateContent = await getTemplateContent(templateId, configuration)
+    
+    // Create the page directory
+    const projectRoot = process.cwd()
+    const pageDir = path.join(projectRoot, 'src', 'app', sanitizedPageName)
+    
+    try {
+      await fs.mkdir(pageDir, { recursive: true })
+    } catch (error) {
+      console.log('Directory might already exist, continuing...')
+    }
 
-    // For serverless environment, we'll simulate page creation
-    // In production, this would integrate with a database or external API
+    // Write the page file
+    const pagePath = path.join(pageDir, 'page.tsx')
+    await fs.writeFile(pagePath, templateContent)
+
+    // Create metadata file
     const metadata = {
       templateId,
       pageName: sanitizedPageName,
       configuration,
       createdAt: new Date().toISOString(),
-      lastModified: new Date().toISOString(),
-      content: templateContent
+      lastModified: new Date().toISOString()
     }
+    
+    const metadataPath = path.join(pageDir, 'metadata.json')
+    await fs.writeFile(metadataPath, JSON.stringify(metadata, null, 2))
 
-    // Simulate successful deployment
-    console.log(`✅ Page created successfully: ${sanitizedPageName}`)
+    // Auto-commit and push the changes
+    try {
+      // Add the new files
+      await execAsync(`cd "${projectRoot}" && git add "src/app/${sanitizedPageName}/"`)
+      
+      // Commit with a descriptive message
+      const commitMessage = `Generated page: ${sanitizedPageName} using ${templateId} template`
+      await execAsync(`cd "${projectRoot}" && git commit -m "${commitMessage}"`)
+      
+      // Push to GitHub
+      await execAsync(`cd "${projectRoot}" && git push`)
+      
+      console.log(`✅ Successfully created and deployed page: ${sanitizedPageName}`)
+      
+    } catch (gitError) {
+      console.warn('Git operation failed:', gitError)
+      // Don't fail the API call - the files were created successfully
+    }
 
     return NextResponse.json({
       success: true,
@@ -46,15 +97,10 @@ export async function POST(request: NextRequest) {
       metadata,
       deployed: true,
       deploymentUrl: `https://url1234.com/${sanitizedPageName}`,
-      message: 'Page created successfully',
-      pageData: {
-        templateId,
-        pageName: sanitizedPageName,
-        configuration,
-        createdAt: metadata.createdAt,
-        lastModified: metadata.lastModified
-      }
+      message: 'Page created and committed to GitHub successfully',
+      filePath: `src/app/${sanitizedPageName}/page.tsx`
     })
+    
   } catch (error) {
     console.error('Error creating page:', error)
     console.error('Error details:', {

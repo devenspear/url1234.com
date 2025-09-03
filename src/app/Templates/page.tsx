@@ -119,11 +119,8 @@ export default function TemplateManagerPage() {
   ]
 
   useEffect(() => {
-    // Load deployed pages from localStorage (in production, this would be from a database)
-    const saved = localStorage.getItem('deployedPages')
-    if (saved) {
-      setDeployedPages(JSON.parse(saved))
-    }
+    // Load deployed pages from API
+    loadDeployedPages()
     
     // Load dark mode preference
     const darkMode = localStorage.getItem('darkMode')
@@ -132,6 +129,18 @@ export default function TemplateManagerPage() {
       document.documentElement.classList.add('dark')
     }
   }, [])
+
+  const loadDeployedPages = async () => {
+    try {
+      const response = await fetch('/api/pages/list')
+      if (response.ok) {
+        const data = await response.json()
+        setDeployedPages(data.pages)
+      }
+    } catch (error) {
+      console.error('Failed to load pages:', error)
+    }
+  }
 
   // Dark mode toggle effect
   useEffect(() => {
@@ -171,24 +180,8 @@ export default function TemplateManagerPage() {
       if (response.ok) {
         const result = await response.json()
         
-        // Add to local state with full configuration
-        const newPage: DeployedPage = {
-          id: Date.now().toString(),
-          name: result.pageName,
-          url: result.deploymentUrl || `url1234.com/${result.pageName}`,
-          template: selectedTemplate.name,
-          createdAt: new Date().toISOString(),
-          status: 'live'
-        }
-
-        const updatedPages = [...deployedPages, newPage]
-        setDeployedPages(updatedPages)
-        localStorage.setItem('deployedPages', JSON.stringify(updatedPages))
-        
-        // Also store the full page configuration for rendering
-        const pageConfigs = JSON.parse(localStorage.getItem('pageConfigurations') || '{}')
-        pageConfigs[result.pageName] = result.pageData
-        localStorage.setItem('pageConfigurations', JSON.stringify(pageConfigs))
+        // Refresh the pages list from the API
+        await loadDeployedPages()
         
         // Reset form
         setNewPageUrl('')
@@ -212,20 +205,13 @@ export default function TemplateManagerPage() {
 
     try {
       // Call the API to delete the page
-      const response = await fetch(`/api/pages?page=${pageName}`, {
+      const response = await fetch(`/api/pages/delete?page=${pageName}`, {
         method: 'DELETE'
       })
 
       if (response.ok) {
-        // Remove from local state
-        const updatedPages = deployedPages.filter(p => p.id !== pageId)
-        setDeployedPages(updatedPages)
-        localStorage.setItem('deployedPages', JSON.stringify(updatedPages))
-      } else if (response.status === 404) {
-        // Page doesn't exist on server, but remove from local storage anyway
-        const updatedPages = deployedPages.filter(p => p.id !== pageId)
-        setDeployedPages(updatedPages)
-        localStorage.setItem('deployedPages', JSON.stringify(updatedPages))
+        // Refresh the pages list from the API
+        await loadDeployedPages()
       } else {
         const errorData = await response.json().catch(() => ({}))
         alert(`Failed to delete page: ${errorData.error || 'Unknown error'}`)
