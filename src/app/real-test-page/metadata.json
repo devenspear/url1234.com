@@ -1,0 +1,12 @@
+{
+  "templateId": "hero-landing",
+  "pageName": "real-test-page",
+  "configuration": {
+    "title": "Real Test Page",
+    "subtitle": "Actually Generated",
+    "description": "This page should be a real file",
+    "companyName": "Test Co"
+  },
+  "createdAt": "2025-09-03T00:06:42.063Z",
+  "lastModified": "2025-09-03T00:06:42.064Z"
+}
