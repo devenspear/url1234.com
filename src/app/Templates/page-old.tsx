@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { 
   Layout, 
@@ -23,9 +24,7 @@ import {
   Layers,
   ArrowRight,
   Moon,
-  Sun,
-  FileText,
-  Home
+  Sun
 } from 'lucide-react'
 
 interface Template {
@@ -54,7 +53,6 @@ export default function PageManagerPage() {
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [newPageUrl, setNewPageUrl] = useState('')
   const [copiedCode, setCopiedCode] = useState(false)
-  const [activeTab, setActiveTab] = useState('templates')
   const [settings, setSettings] = useState({
     vercelProject: 'url1234-main',
     productionDomain: 'url1234.com',
@@ -121,8 +119,10 @@ export default function PageManagerPage() {
   ]
 
   useEffect(() => {
+    // Load deployed pages from API
     loadDeployedPages()
     
+    // Load dark mode preference
     const darkMode = localStorage.getItem('darkMode')
     if (darkMode === 'true') {
       setIsDarkMode(true)
@@ -142,6 +142,7 @@ export default function PageManagerPage() {
     }
   }
 
+  // Dark mode toggle effect
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add('dark')
@@ -158,6 +159,7 @@ export default function PageManagerPage() {
     setIsCreating(true)
     
     try {
+      // Call the API to create the page
       const response = await fetch('/api/templates/create', {
         method: 'POST',
         headers: {
@@ -168,7 +170,7 @@ export default function PageManagerPage() {
           pageName: newPageUrl,
           configuration: {
             title: `${selectedTemplate.name} Page`,
-            subtitle: 'Created with Page Manager',
+            subtitle: 'Created with Template Manager',
             description: `A page created using the ${selectedTemplate.name} template`,
             companyName: 'Your Company'
           }
@@ -177,7 +179,11 @@ export default function PageManagerPage() {
 
       if (response.ok) {
         const result = await response.json()
+        
+        // Refresh the pages list from the API
         await loadDeployedPages()
+        
+        // Reset form
         setNewPageUrl('')
         setSelectedTemplate(null)
       } else {
@@ -198,11 +204,13 @@ export default function PageManagerPage() {
     }
 
     try {
+      // Call the API to delete the page
       const response = await fetch(`/api/pages/delete?page=${pageName}`, {
         method: 'DELETE'
       })
 
       if (response.ok) {
+        // Refresh the pages list from the API
         await loadDeployedPages()
       } else {
         const errorData = await response.json().catch(() => ({}))
@@ -232,7 +240,7 @@ export default function ${newPageUrl || 'YourPage'}Page() {
   }
 
   const handleSaveSettings = () => {
-    localStorage.setItem('pageManagerSettings', JSON.stringify(settings))
+    localStorage.setItem('templateManagerSettings', JSON.stringify(settings))
     setSettingsSaved(true)
     setTimeout(() => setSettingsSaved(false), 2000)
   }
@@ -241,135 +249,86 @@ export default function ${newPageUrl || 'YourPage'}Page() {
     setSettings(prev => ({ ...prev, [field]: value }))
   }
 
-  const navigationItems = [
-    { id: 'templates', label: 'Templates', icon: Layout, count: templates.length },
-    { id: 'pages', label: 'Pages', icon: FileText, count: deployedPages.length },
-    { id: 'settings', label: 'Settings', icon: Settings }
-  ]
-
   return (
-    <div className={`min-h-screen flex ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
-      {/* Left Sidebar Navigation */}
-      <div className={`w-64 border-r transition-all duration-200 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-        {/* Logo/Header */}
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl">
-              <Layout className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                Page Manager
-              </h1>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                url1234.com
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Navigation Items */}
-        <nav className="p-4 space-y-2">
-          {navigationItems.map((item) => (
+    <div className={`min-h-screen transition-colors duration-200 ${isDarkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-slate-50 via-white to-slate-50'}`}>
+      {/* Header */}
+      <div className={`relative overflow-hidden border-b transition-colors duration-200 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+        <div className={`absolute inset-0 opacity-50 ${isDarkMode ? 'bg-gradient-to-r from-gray-700 to-gray-600' : 'bg-gradient-to-r from-blue-50 to-indigo-50'}`}></div>
+        <div className="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12">
+          {/* Dark Mode Toggle */}
+          <div className="absolute top-6 right-6">
             <button
-              key={item.id}
-              onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center justify-between px-4 py-3 text-left rounded-xl transition-all duration-200 ${
-                activeTab === item.id
-                  ? isDarkMode
-                    ? 'bg-blue-600 text-white shadow-lg'
-                    : 'bg-blue-50 text-blue-700 border border-blue-200'
-                  : isDarkMode
-                    ? 'text-gray-300 hover:bg-gray-700'
-                    : 'text-gray-700 hover:bg-gray-100'
-              }`}
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className={`p-3 rounded-full transition-all duration-200 hover:scale-105 ${isDarkMode ? 'bg-gray-700 text-yellow-400 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
             >
-              <div className="flex items-center gap-3">
-                <item.icon className="w-5 h-5" />
-                <span className="font-medium">{item.label}</span>
-              </div>
-              {item.count !== undefined && (
-                <Badge 
-                  variant="secondary" 
-                  className={`text-xs ${
-                    activeTab === item.id 
-                      ? 'bg-white/20 text-white' 
-                      : isDarkMode ? 'bg-gray-600 text-gray-300' : 'bg-gray-200 text-gray-600'
-                  }`}
-                >
-                  {item.count}
-                </Badge>
-              )}
+              {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
-          ))}
-        </nav>
-
-        {/* Bottom Section - Dark Mode Toggle */}
-        <div className="absolute bottom-4 left-4 right-4">
-          <button
-            onClick={() => setIsDarkMode(!isDarkMode)}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-              isDarkMode 
-                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-          >
-            {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            <span className="font-medium">
-              {isDarkMode ? 'Light Mode' : 'Dark Mode'}
-            </span>
-          </button>
+          </div>
+          <div className="text-center">
+            <div className="flex items-center justify-center mb-6">
+              <div className="p-3 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl shadow-lg">
+                <Layout className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            <h1 className={`text-4xl md:text-5xl font-bold ${isDarkMode ? 'bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent' : 'bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent'}`}>
+              Page Manager
+            </h1>
+          </div>
         </div>
       </div>
 
-      {/* Main Content Area */}
-      <div className="flex-1 overflow-auto">
-        {/* Header */}
-        <div className={`border-b transition-colors duration-200 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-          <div className="px-8 py-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  {activeTab === 'templates' && 'Templates'}
-                  {activeTab === 'pages' && 'Pages'}
-                  {activeTab === 'settings' && 'Settings'}
-                </h1>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  {activeTab === 'templates' && 'Choose and deploy professional templates'}
-                  {activeTab === 'pages' && 'Manage your deployed pages'}
-                  {activeTab === 'settings' && 'Configure your page manager'}
-                </p>
-              </div>
-              
-              {/* Stats Cards in Header */}
-              <div className="flex gap-4">
-                <div className={`px-4 py-2 rounded-lg border ${isDarkMode ? 'bg-blue-900/20 border-blue-700' : 'bg-blue-50 border-blue-200'}`}>
-                  <div className="flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-blue-600" />
-                    <span className={`text-sm font-medium ${isDarkMode ? 'text-blue-300' : 'text-blue-900'}`}>
-                      {templates.length} Templates
-                    </span>
-                  </div>
-                </div>
-                <div className={`px-4 py-2 rounded-lg border ${isDarkMode ? 'bg-green-900/20 border-green-700' : 'bg-green-50 border-green-200'}`}>
-                  <div className="flex items-center gap-2">
-                    <Globe className="w-4 h-4 text-green-600" />
-                    <span className={`text-sm font-medium ${isDarkMode ? 'text-green-300' : 'text-green-900'}`}>
-                      {deployedPages.length} Pages
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-12">
+        <Tabs defaultValue="templates" className="space-y-8">
+          <div className="flex justify-center">
+            <TabsList className={`grid w-full max-w-md grid-cols-3 h-14 p-1 rounded-2xl ${isDarkMode ? 'bg-gray-800/50' : 'bg-gray-100/50'}`}>
+              <TabsTrigger value="templates" className="text-sm font-medium rounded-xl">Templates</TabsTrigger>
+              <TabsTrigger value="deployed" className="text-sm font-medium rounded-xl">Pages</TabsTrigger>
+              <TabsTrigger value="settings" className="text-sm font-medium rounded-xl">Settings</TabsTrigger>
+            </TabsList>
           </div>
-        </div>
 
-        {/* Content */}
-        <div className="p-8">
-          {/* Templates Tab */}
-          {activeTab === 'templates' && (
+          <TabsContent value="templates" className="space-y-8">
+            {/* Hero Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <Card className={`p-6 ${isDarkMode ? 'bg-gradient-to-br from-blue-900/20 to-blue-800/20 border-blue-700' : 'bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200'}`}>
+                <div className="flex items-center gap-3">
+                  <Zap className="w-8 h-8 text-blue-600" />
+                  <div>
+                    <p className={`text-2xl font-bold ${isDarkMode ? 'text-blue-300' : 'text-blue-900'}`}>{templates.length}</p>
+                    <p className={`text-sm ${isDarkMode ? 'text-blue-400' : 'text-blue-700'}`}>Templates Available</p>
+                  </div>
+                </div>
+              </Card>
+              
+              <Card className={`p-6 ${isDarkMode ? 'bg-gradient-to-br from-green-900/20 to-green-800/20 border-green-700' : 'bg-gradient-to-br from-green-50 to-green-100 border-green-200'}`}>
+                <div className="flex items-center gap-3">
+                  <Globe className="w-8 h-8 text-green-600" />
+                  <div>
+                    <p className={`text-2xl font-bold ${isDarkMode ? 'text-green-300' : 'text-green-900'}`}>{deployedPages.length}</p>
+                    <p className={`text-sm ${isDarkMode ? 'text-green-400' : 'text-green-700'}`}>Pages Deployed</p>
+                  </div>
+                </div>
+              </Card>
+              
+              <Card className={`p-6 ${isDarkMode ? 'bg-gradient-to-br from-purple-900/20 to-purple-800/20 border-purple-700' : 'bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200'}`}>
+                <div className="flex items-center gap-3">
+                  <Layers className="w-8 h-8 text-purple-600" />
+                  <div>
+                    <p className={`text-2xl font-bold ${isDarkMode ? 'text-purple-300' : 'text-purple-900'}`}>∞</p>
+                    <p className={`text-sm ${isDarkMode ? 'text-purple-400' : 'text-purple-700'}`}>Possibilities</p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+
+            {/* Template Selection */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2 space-y-6">
+                <div>
+                  <h2 className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Choose Your Template</h2>
+                  <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Select from our collection of professionally designed templates</p>
+                </div>
+                
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {templates.map((template) => (
                     <Card 
@@ -387,8 +346,8 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                             <Palette className={`w-5 h-5 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`} />
                           </div>
                           <div>
-                            <h3 className={`font-bold text-lg ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{template.name}</h3>
-                            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{template.category}</p>
+                            <h3 className={`font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{template.name}</h3>
+                            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{template.category}</p>
                           </div>
                         </div>
                         <Badge 
@@ -400,24 +359,24 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                         </Badge>
                       </div>
                       
-                      <p className={`text-sm mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{template.description}</p>
+                      <p className={`text-sm mb-4 line-clamp-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{template.description}</p>
                       
                       <div className="flex flex-wrap gap-2 mb-4">
                         {template.features.slice(0, 3).map((feature, i) => (
-                          <span key={i} className={`px-3 py-1 text-xs rounded-full ${isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}>
+                          <span key={i} className={`px-2 py-1 text-xs rounded-md ${isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}>
                             {feature}
                           </span>
                         ))}
                         {template.features.length > 3 && (
-                          <span className={`px-3 py-1 text-xs rounded-full ${isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}>
-                            +{template.features.length - 3}
+                          <span className={`px-2 py-1 text-xs rounded-md ${isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}>
+                            +{template.features.length - 3} more
                           </span>
                         )}
                       </div>
                       
                       <div className="flex gap-3">
                         <button 
-                          className="flex items-center gap-2 px-4 py-2 text-sm text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 transition-colors"
                           onClick={(e) => {
                             e.stopPropagation()
                             window.open(template.preview, '_blank')
@@ -427,9 +386,7 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                           Preview
                         </button>
                         <button 
-                          className={`flex items-center gap-2 px-4 py-2 text-sm rounded-lg transition-colors ${
-                            isDarkMode ? 'text-gray-300 bg-gray-700 hover:bg-gray-600' : 'text-gray-600 bg-gray-100 hover:bg-gray-200'
-                          }`}
+                          className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-800 transition-colors"
                           onClick={(e) => {
                             e.stopPropagation()
                             copyCodeSnippet()
@@ -446,12 +403,12 @@ export default function ${newPageUrl || 'YourPage'}Page() {
 
               {/* Configuration Panel */}
               <div className="space-y-6">
+                <div>
+                  <h2 className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Create New Page</h2>
+                  <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Configure your new landing page</p>
+                </div>
+                
                 <Card className={`p-6 space-y-6 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-                  <div>
-                    <h2 className={`text-xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Create New Page</h2>
-                    <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Configure your new landing page</p>
-                  </div>
-                  
                   {selectedTemplate ? (
                     <>
                       <div className={`p-4 rounded-xl border ${isDarkMode ? 'bg-gradient-to-r from-blue-900/20 to-indigo-900/20 border-blue-700' : 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200'}`}>
@@ -465,9 +422,9 @@ export default function ${newPageUrl || 'YourPage'}Page() {
 
                       <div>
                         <label className={`block text-sm font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Page URL</label>
-                        <div className="flex items-center space-x-0">
+                        <div className="flex items-center space-x-2">
                           <span className={`px-3 py-3 text-sm rounded-l-xl border border-r-0 ${isDarkMode ? 'bg-gray-700 text-gray-300 border-gray-600' : 'bg-gray-50 text-gray-500 border-gray-300'}`}>
-                            url1234.com/p/
+                            url1234.com/
                           </span>
                           <input
                             type="text"
@@ -476,6 +433,18 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                             placeholder="my-landing-page"
                             className={`flex-1 px-4 py-3 border border-l-0 rounded-r-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'}`}
                           />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className={`block text-sm font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Template Features</label>
+                        <div className="space-y-3">
+                          {selectedTemplate.features.map((feature, i) => (
+                            <label key={i} className="flex items-center gap-3">
+                              <input type="checkbox" defaultChecked className="w-4 h-4 text-blue-600 rounded" />
+                              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{feature}</span>
+                            </label>
+                          ))}
                         </div>
                       </div>
 
@@ -528,129 +497,153 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                 </Card>
               </div>
             </div>
-          )}
+          </TabsContent>
 
-          {/* Pages Tab */}
-          {activeTab === 'pages' && (
-            <div className="space-y-6">
-              {deployedPages.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {deployedPages.map((page) => (
-                    <Card key={page.id} className={`p-8 hover:shadow-lg transition-shadow duration-200 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-                      <div className="flex items-center justify-between mb-6">
-                        <div className="flex items-center gap-4">
-                          <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isDarkMode ? 'bg-gradient-to-r from-blue-800 to-indigo-800' : 'bg-gradient-to-r from-blue-100 to-indigo-100'}`}>
-                            <Globe className="w-6 h-6 text-blue-600" />
-                          </div>
-                          <div>
-                            <h3 className={`font-bold text-lg ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{page.name}</h3>
-                            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{page.template}</p>
-                          </div>
-                        </div>
-                        <Badge 
-                          variant={page.status === 'live' ? 'default' : 
-                                  page.status === 'building' ? 'secondary' : 'outline'}
-                          className={`text-sm px-3 py-1 ${page.status === 'live' ? 'bg-green-100 text-green-800 border-green-200' : ''}`}
-                        >
-                          {page.status}
-                        </Badge>
-                      </div>
-                      
-                      <div className="space-y-3 mb-8">
-                        <p className={`text-base font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{page.url}</p>
-                        <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-400'}`}>
-                          Created: {new Date(page.createdAt).toLocaleDateString()}
-                        </p>
-                      </div>
-                      
-                      <div className="flex gap-3">
-                        <button 
-                          className="flex-1 px-6 py-4 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 text-sm"
-                          onClick={() => window.open(`/p/${page.name}`, '_blank')}
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                          Visit Page
-                        </button>
-                        <button 
-                          onClick={() => {
-                            setSelectedTemplate(templates.find(t => t.name === page.template) || null)
-                            setNewPageUrl(`${page.name}-v2`)
-                            setActiveTab('templates')
-                          }}
-                          className={`px-4 py-4 border font-medium rounded-xl transition-colors flex items-center justify-center ${isDarkMode ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'}`}
-                        >
-                          <Edit3 className="w-4 h-4" />
-                        </button>
-                        <button 
-                          onClick={() => handleDeletePage(page.id, page.name)}
-                          className="px-4 py-4 border border-red-300 text-red-600 font-medium rounded-xl hover:bg-red-50 transition-colors flex items-center justify-center">
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              ) : (
-                <Card className={`p-16 text-center ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-                  <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 ${isDarkMode ? 'bg-gradient-to-r from-gray-700 to-gray-600' : 'bg-gradient-to-r from-gray-100 to-gray-200'}`}>
-                    <Globe className="w-10 h-10 text-gray-400" />
-                  </div>
-                  <h3 className={`text-xl font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>No pages deployed yet</h3>
-                  <p className={`text-base mb-8 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Create your first page from the Templates section</p>
-                  <button 
-                    onClick={() => setActiveTab('templates')}
-                    className="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 flex items-center gap-3 mx-auto"
-                  >
-                    <ArrowRight className="w-5 h-5" />
-                    Get Started with Templates
-                  </button>
-                </Card>
-              )}
+          <TabsContent value="deployed" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Deployed Pages</h2>
+                <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Manage your live landing pages</p>
+              </div>
+              <button 
+                onClick={() => {
+                  // Switch to templates tab
+                  const templatesTab = document.querySelector('[value="templates"]') as HTMLButtonElement
+                  templatesTab?.click()
+                }}
+                className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-200 flex items-center gap-2 shadow-lg"
+              >
+                <Plus className="w-5 h-5" />
+                New Page
+              </button>
             </div>
-          )}
 
-          {/* Settings Tab */}
-          {activeTab === 'settings' && (
-            <div className="max-w-4xl space-y-8">
-              <Card className={`p-8 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-                <h3 className={`font-bold text-xl mb-6 flex items-center gap-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  <Database className="w-6 h-6" />
+            {deployedPages.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {deployedPages.map((page) => (
+                  <Card key={page.id} className={`p-6 hover:shadow-lg transition-shadow duration-200 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isDarkMode ? 'bg-gradient-to-r from-blue-800 to-indigo-800' : 'bg-gradient-to-r from-blue-100 to-indigo-100'}`}>
+                          <Globe className="w-5 h-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <h3 className={`font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{page.name}</h3>
+                          <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{page.template}</p>
+                        </div>
+                      </div>
+                      <Badge 
+                        variant={page.status === 'live' ? 'default' : 
+                                page.status === 'building' ? 'secondary' : 'outline'}
+                        className={`${page.status === 'live' ? 'bg-green-100 text-green-800 border-green-200' : ''}`}
+                      >
+                        {page.status}
+                      </Badge>
+                    </div>
+                    
+                    <div className="space-y-2 mb-6">
+                      <p className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{page.url}</p>
+                      <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-400'}`}>
+                        Created: {new Date(page.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <button 
+                        className="flex-1 px-4 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                        onClick={() => window.open(`/p/${page.name}`, '_blank')}
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        Visit
+                      </button>
+                      <button 
+                        onClick={() => {
+                          // Switch to templates tab and pre-fill form with page data
+                          setSelectedTemplate(templates.find(t => t.name === page.template) || null)
+                          setNewPageUrl(`${page.name}-v2`)
+                          const templatesTab = document.querySelector('[value="templates"]') as HTMLButtonElement
+                          templatesTab?.click()
+                        }}
+                        className={`px-4 py-3 border font-medium rounded-lg transition-colors flex items-center justify-center ${isDarkMode ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'}`}
+                      >
+                        <Edit3 className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={() => handleDeletePage(page.id, page.name)}
+                        className="px-4 py-3 border border-red-300 text-red-600 font-medium rounded-lg hover:bg-red-50 transition-colors flex items-center justify-center">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <Card className={`p-12 text-center ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${isDarkMode ? 'bg-gradient-to-r from-gray-700 to-gray-600' : 'bg-gradient-to-r from-gray-100 to-gray-200'}`}>
+                  <Globe className="w-8 h-8 text-gray-400" />
+                </div>
+                <p className={`mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>No pages deployed yet</p>
+                <p className={`text-sm mb-6 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Create your first page from the Templates tab</p>
+                <button 
+                  onClick={() => {
+                    const templatesTab = document.querySelector('[value="templates"]') as HTMLButtonElement
+                    templatesTab?.click()
+                  }}
+                  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 flex items-center gap-2 mx-auto"
+                >
+                  <ArrowRight className="w-4 h-4" />
+                  Get Started
+                </button>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="settings" className="space-y-6">
+            <div>
+              <h2 className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Settings</h2>
+              <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Configure your template system</p>
+            </div>
+            
+            <div className="max-w-4xl space-y-6">
+              <Card className={`p-6 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                <h3 className={`font-bold mb-4 flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <Database className="w-5 h-5" />
                   Deployment Configuration
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className={`block text-base font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Vercel Project</label>
+                    <label className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Vercel Project</label>
                     <input
                       type="text"
                       value={settings.vercelProject}
                       onChange={(e) => handleSettingChange('vercelProject', e.target.value)}
-                      className={`w-full px-4 py-4 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-base ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
                     />
                   </div>
                   <div>
-                    <label className={`block text-base font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Production Domain</label>
+                    <label className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Production Domain</label>
                     <input
                       type="text"
                       value={settings.productionDomain}
                       onChange={(e) => handleSettingChange('productionDomain', e.target.value)}
-                      className={`w-full px-4 py-4 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-base ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
                     />
                   </div>
                 </div>
               </Card>
 
-              <Card className={`p-8 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-                <h3 className={`font-bold text-xl mb-6 flex items-center gap-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  <Settings className="w-6 h-6" />
+              <Card className={`p-6 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                <h3 className={`font-bold mb-4 flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <Settings className="w-5 h-5" />
                   API Integration
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className={`block text-base font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Database Provider</label>
+                    <label className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Database Provider</label>
                     <select 
                       value={settings.databaseProvider}
                       onChange={(e) => handleSettingChange('databaseProvider', e.target.value)}
-                      className={`w-full px-4 py-4 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-base ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
                     >
                       <option>PostgreSQL (Supabase)</option>
                       <option>MySQL (PlanetScale)</option>
@@ -659,11 +652,11 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                     </select>
                   </div>
                   <div>
-                    <label className={`block text-base font-semibold mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Authentication Provider</label>
+                    <label className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Authentication Provider</label>
                     <select 
                       value={settings.authProvider}
                       onChange={(e) => handleSettingChange('authProvider', e.target.value)}
-                      className={`w-full px-4 py-4 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-base ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
+                      className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none ${isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
                     >
                       <option>NextAuth.js</option>
                       <option>Clerk</option>
@@ -677,7 +670,7 @@ export default function ${newPageUrl || 'YourPage'}Page() {
               <div className="flex justify-end">
                 <button 
                   onClick={handleSaveSettings}
-                  className={`px-8 py-4 font-semibold rounded-xl transition-all duration-200 shadow-lg flex items-center gap-3 text-base ${
+                  className={`px-6 py-3 font-semibold rounded-lg transition-all duration-200 shadow-lg flex items-center gap-2 ${
                     settingsSaved 
                       ? 'bg-green-600 hover:bg-green-700 text-white' 
                       : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700'
@@ -694,8 +687,8 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                 </button>
               </div>
             </div>
-          )}
-        </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   )
