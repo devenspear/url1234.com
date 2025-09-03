@@ -1,94 +1,48 @@
 import { NextResponse } from 'next/server'
-import fs from 'fs/promises'
-import path from 'path'
 
 export async function GET() {
   try {
-    const projectRoot = process.cwd()
-    const pagesDir = path.join(projectRoot, 'src', 'app', 'p')
+    // In production, fetch the manifest from the public URL
+    // In development, we can also use this approach for consistency
+    const baseUrl = process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}`
+      : process.env.NODE_ENV === 'production'
+      ? 'https://url1234.com'
+      : 'http://localhost:3004'
     
-    // Check if p directory exists
-    let entries
     try {
-      await fs.access(pagesDir)
-      // Read all directories in src/app/p
-      entries = await fs.readdir(pagesDir, { withFileTypes: true })
-    } catch {
-      // In serverless environments or when p directory doesn't exist
-      // Fall back to known pages from static generation
-      const knownPages = ['doghouse', 'workflow-test', 'real-test-page', 'alysbeach', 'template-example', 'kaleidoscope', 'template-home']
-      const pages = knownPages.map(name => ({
-        id: name,
-        name: name,
-        url: `https://url1234.com/p/${name}`,
-        template: 'unknown',
-        createdAt: new Date().toISOString(),
-        lastModified: new Date().toISOString(),
-        status: 'live' as const,
-        configuration: {}
-      }))
-      
-      return NextResponse.json({
-        success: true,
-        pages: pages.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      // Fetch the manifest from the public directory
+      const manifestUrl = `${baseUrl}/pages-manifest.json`
+      const response = await fetch(manifestUrl, {
+        // Add cache control to ensure fresh data
+        cache: 'no-store'
       })
-    }
-    
-    const pages = []
-    
-    for (const entry of entries) {
-      if (entry.isDirectory() && !entry.name.startsWith('[') && !entry.name.startsWith('(')) {
-        // Skip special Next.js directories and system directories
-        if (['api', 'globals.css', 'layout.tsx', 'page.tsx'].includes(entry.name)) {
-          continue
-        }
+      
+      if (response.ok) {
+        const manifest = await response.json()
         
-        const pageDir = path.join(pagesDir, entry.name)
+        // Add full URLs to each page
+        const pagesWithUrls = manifest.pages.map((page: any) => ({
+          ...page,
+          url: `https://url1234.com${page.url}`,
+          status: 'live'
+        }))
         
-        try {
-          // Check if it has a page.tsx file
-          const pageFile = path.join(pageDir, 'page.tsx')
-          await fs.access(pageFile)
-          
-          // Try to read metadata
-          let metadata = null
-          try {
-            const metadataFile = path.join(pageDir, 'metadata.json')
-            const metadataContent = await fs.readFile(metadataFile, 'utf-8')
-            metadata = JSON.parse(metadataContent)
-          } catch {
-            // No metadata file, create basic info
-            const stats = await fs.stat(pageFile)
-            metadata = {
-              pageName: entry.name,
-              templateId: 'unknown',
-              configuration: {},
-              createdAt: stats.birthtime.toISOString(),
-              lastModified: stats.mtime.toISOString()
-            }
-          }
-          
-          pages.push({
-            id: entry.name,
-            name: entry.name,
-            url: `https://url1234.com/p/${entry.name}`,
-            template: metadata.templateId || 'Unknown Template',
-            createdAt: metadata.createdAt,
-            lastModified: metadata.lastModified,
-            status: 'live',
-            configuration: metadata.configuration
-          })
-          
-        } catch {
-          // No page.tsx file, skip this directory
-          continue
-        }
+        return NextResponse.json({
+          success: true,
+          pages: pagesWithUrls.sort((a: any, b: any) => 
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          )
+        })
       }
+    } catch (fetchError) {
+      console.warn('Failed to fetch manifest:', fetchError)
     }
     
+    // Fallback: Return empty array if manifest not found
     return NextResponse.json({
       success: true,
-      pages: pages.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      pages: []
     })
     
   } catch (error) {

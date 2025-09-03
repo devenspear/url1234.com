@@ -100,10 +100,43 @@ export async function POST(request: NextRequest) {
     const metadataPath = path.join(pageDir, 'metadata.json')
     await fs.writeFile(metadataPath, JSON.stringify(metadata, null, 2))
 
+    // Update the pages manifest
+    try {
+      const manifestPath = path.join(projectRoot, 'public', 'pages-manifest.json')
+      let manifest = { pages: [] as any[], lastUpdated: new Date().toISOString() }
+      
+      try {
+        const manifestContent = await fs.readFile(manifestPath, 'utf-8')
+        manifest = JSON.parse(manifestContent)
+      } catch {
+        // Manifest doesn't exist yet, use default
+      }
+      
+      // Add the new page to manifest
+      const pageEntry = {
+        id: sanitizedPageName,
+        name: sanitizedPageName,
+        url: `/p/${sanitizedPageName}`,
+        template: templateId,
+        createdAt: metadata.createdAt,
+        lastModified: metadata.lastModified,
+        configuration
+      }
+      
+      // Remove if already exists (update case)
+      manifest.pages = manifest.pages.filter((p: any) => p.id !== sanitizedPageName)
+      manifest.pages.push(pageEntry)
+      manifest.lastUpdated = new Date().toISOString()
+      
+      await fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2))
+    } catch (manifestError) {
+      console.warn('Failed to update manifest:', manifestError)
+    }
+
     // Auto-commit and push the changes
     try {
-      // Add the new files
-      await execAsync(`cd "${projectRoot}" && git add "src/app/p/${sanitizedPageName}/"`)
+      // Add the new files and manifest
+      await execAsync(`cd "${projectRoot}" && git add "src/app/p/${sanitizedPageName}/" "public/pages-manifest.json"`)
       
       // Commit with a descriptive message
       const commitMessage = `Generated page: ${sanitizedPageName} using ${templateId} template`

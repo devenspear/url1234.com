@@ -44,6 +44,27 @@ export async function DELETE(request: NextRequest) {
     // Delete the directory and all its contents
     await fs.rmdir(pageDir, { recursive: true })
     
+    // Update the pages manifest
+    try {
+      const manifestPath = path.join(projectRoot, 'public', 'pages-manifest.json')
+      let manifest = { pages: [] as any[], lastUpdated: new Date().toISOString() }
+      
+      try {
+        const manifestContent = await fs.readFile(manifestPath, 'utf-8')
+        manifest = JSON.parse(manifestContent)
+      } catch {
+        // Manifest doesn't exist, nothing to remove
+      }
+      
+      // Remove the page from manifest
+      manifest.pages = manifest.pages.filter((p: any) => p.id !== pageName)
+      manifest.lastUpdated = new Date().toISOString()
+      
+      await fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2))
+    } catch (manifestError) {
+      console.warn('Failed to update manifest:', manifestError)
+    }
+    
     // Auto-commit and push the deletion
     try {
       // Add the deletion to git
