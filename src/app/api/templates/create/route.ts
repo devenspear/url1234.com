@@ -103,7 +103,16 @@ export async function POST(request: NextRequest) {
     // Update the pages manifest
     try {
       const manifestPath = path.join(projectRoot, 'public', 'pages-manifest.json')
-      let manifest = { pages: [] as any[], lastUpdated: new Date().toISOString() }
+      interface PageEntry {
+        id: string
+        name: string
+        url: string
+        template: string
+        createdAt: string
+        lastModified: string
+        configuration: Record<string, unknown>
+      }
+      let manifest = { pages: [] as PageEntry[], lastUpdated: new Date().toISOString() }
       
       try {
         const manifestContent = await fs.readFile(manifestPath, 'utf-8')
@@ -124,7 +133,7 @@ export async function POST(request: NextRequest) {
       }
       
       // Remove if already exists (update case)
-      manifest.pages = manifest.pages.filter((p: any) => p.id !== sanitizedPageName)
+      manifest.pages = manifest.pages.filter((p) => p.id !== sanitizedPageName)
       manifest.pages.push(pageEntry)
       manifest.lastUpdated = new Date().toISOString()
       

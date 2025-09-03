@@ -47,7 +47,16 @@ export async function DELETE(request: NextRequest) {
     // Update the pages manifest
     try {
       const manifestPath = path.join(projectRoot, 'public', 'pages-manifest.json')
-      let manifest = { pages: [] as any[], lastUpdated: new Date().toISOString() }
+      interface PageEntry {
+        id: string
+        name: string
+        url: string
+        template: string
+        createdAt: string
+        lastModified: string
+        configuration: Record<string, unknown>
+      }
+      let manifest = { pages: [] as PageEntry[], lastUpdated: new Date().toISOString() }
       
       try {
         const manifestContent = await fs.readFile(manifestPath, 'utf-8')
@@ -57,7 +66,7 @@ export async function DELETE(request: NextRequest) {
       }
       
       // Remove the page from manifest
-      manifest.pages = manifest.pages.filter((p: any) => p.id !== pageName)
+      manifest.pages = manifest.pages.filter((p) => p.id !== pageName)
       manifest.lastUpdated = new Date().toISOString()
       
       await fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2))

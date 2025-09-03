@@ -1,5 +1,21 @@
 import { NextResponse } from 'next/server'
 
+interface PageEntry {
+  id: string
+  name: string
+  url: string
+  template: string
+  createdAt: string
+  lastModified: string
+  configuration: Record<string, unknown>
+  status?: string
+}
+
+interface Manifest {
+  pages: PageEntry[]
+  lastUpdated: string
+}
+
 export async function GET() {
   try {
     // In production, fetch the manifest from the public URL
@@ -19,10 +35,10 @@ export async function GET() {
       })
       
       if (response.ok) {
-        const manifest = await response.json()
+        const manifest: Manifest = await response.json()
         
         // Add full URLs to each page
-        const pagesWithUrls = manifest.pages.map((page: any) => ({
+        const pagesWithUrls = manifest.pages.map((page) => ({
           ...page,
           url: `https://url1234.com${page.url}`,
           status: 'live'
@@ -30,7 +46,7 @@ export async function GET() {
         
         return NextResponse.json({
           success: true,
-          pages: pagesWithUrls.sort((a: any, b: any) => 
+          pages: pagesWithUrls.sort((a, b) => 
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           )
         })
