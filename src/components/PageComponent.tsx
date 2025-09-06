@@ -40,11 +40,11 @@ export default function PageComponent({ page, pageIndex, onInteract }: PageCompo
         className={`${page.textColor} font-baloo font-bold leading-relaxed px-4 md:px-8 xl:px-20 py-4 md:py-6`}
       >
         {page.title && (
-          <h2 className="font-bubblegum text-lg sm:text-xl md:text-2xl lg:text-4xl xl:text-4xl 2xl:text-5xl mb-2 leading-tight max-w-full text-center lg:text-left">
+          <h2 className="font-bubblegum text-lg sm:text-xl md:text-2xl lg:text-5xl xl:text-5xl 2xl:text-6xl mb-3 leading-tight max-w-full text-center lg:text-left">
             {page.title}
           </h2>
         )}
-        <div className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-2xl whitespace-pre-line leading-snug max-w-full text-center lg:text-left">
+        <div className="text-sm sm:text-base md:text-lg lg:text-2xl xl:text-3xl 2xl:text-3xl whitespace-pre-line leading-relaxed max-w-full text-center lg:text-left">
           {page.text}
         </div>
         
