@@ -13,6 +13,8 @@ export default function BookReader() {
   const [soundEnabled, setSoundEnabled] = useState(true)
   const [soundManager, setSoundManager] = useState<SoundManager | null>(null)
   const [isClient, setIsClient] = useState(false)
+  const [touchStart, setTouchStart] = useState<number | null>(null)
+  const [touchEnd, setTouchEnd] = useState<number | null>(null)
 
   useEffect(() => {
     setIsClient(true)
@@ -69,6 +71,33 @@ export default function BookReader() {
     }
   }
 
+  // Touch/swipe handling
+  const minSwipeDistance = 50
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null)
+    setTouchStart(e.targetTouches[0].clientX)
+  }
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX)
+  }
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+    
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+
+    if (isLeftSwipe && currentPage < pages.length - 1) {
+      nextPage()
+    }
+    if (isRightSwipe && currentPage > 0) {
+      prevPage()
+    }
+  }
+
   if (!isClient) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>
   }
@@ -79,7 +108,12 @@ export default function BookReader() {
       <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-sky-100 via-green-50 to-yellow-50">
 
       {/* Book container */}
-      <div className="relative w-full max-w-6xl aspect-[16/10] bg-white rounded-2xl shadow-2xl overflow-hidden">
+      <div 
+        className="relative w-full max-w-6xl aspect-[16/10] bg-white rounded-2xl shadow-2xl overflow-hidden"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
         <div className="relative w-full h-full" style={{ perspective: '2000px' }}>
           <AnimatePresence mode="wait" custom={currentPage}>
             <motion.div
