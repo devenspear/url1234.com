@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, Volume2, VolumeX } from 'lucide-react'
 import { pages } from '@/utils/bookData'
 import { SoundManager } from '@/utils/soundManager'
 import PageComponent from '@/components/PageComponent'
+import OrientationPrompt from '@/components/OrientationPrompt'
 
 export default function BookReader() {
   const [currentPage, setCurrentPage] = useState(0)
@@ -73,7 +74,9 @@ export default function BookReader() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-sky-100 via-green-50 to-yellow-50">
+    <>
+      <OrientationPrompt />
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-sky-100 via-green-50 to-yellow-50">
 
       {/* Book container */}
       <div className="relative w-full max-w-6xl aspect-[16/10] bg-white rounded-2xl shadow-2xl overflow-hidden">
@@ -217,5 +220,6 @@ export default function BookReader() {
         </button>
       </div>
     </div>
+    </>
   )
 }

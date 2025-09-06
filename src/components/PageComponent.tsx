@@ -37,14 +37,14 @@ export default function PageComponent({ page, pageIndex, onInteract }: PageCompo
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 0.8 }}
-        className={`${page.textColor} font-baloo font-bold leading-relaxed px-20 py-6`}
+        className={`${page.textColor} font-baloo font-bold leading-relaxed px-4 md:px-8 xl:px-20 py-4 md:py-6`}
       >
         {page.title && (
-          <h2 className="font-bubblegum text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl mb-2 leading-tight max-w-full">
+          <h2 className="font-bubblegum text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl mb-2 leading-tight max-w-full text-center md:text-left">
             {page.title}
           </h2>
         )}
-        <div className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl whitespace-pre-line leading-snug max-w-full">
+        <div className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-xl 2xl:text-2xl whitespace-pre-line leading-snug max-w-full text-center md:text-left">
           {page.text}
         </div>
         
@@ -89,28 +89,55 @@ export default function PageComponent({ page, pageIndex, onInteract }: PageCompo
       )
     }
 
-    // Left/Right layouts
+    // Left/Right layouts - responsive handling
     return (
-      <div className="grid grid-cols-1 lg:grid-cols-2 h-full gap-4">
-        {page.imagePosition === 'left' ? (
-          <>
-            <div className="flex items-center justify-center order-1">
+      <div className="h-full">
+        {/* Mobile Portrait: Stack vertically */}
+        <div className="block md:hidden h-full">
+          <div className="flex flex-col h-full">
+            <div className="flex-1 flex items-center justify-center min-h-[45%] max-h-[55%]">
               {imageContent}
             </div>
-            <div className="flex items-center justify-center order-2">
+            <div className="flex-shrink-0 px-4 py-3 max-h-[45%] overflow-y-auto">
               {textContent}
             </div>
-          </>
-        ) : (
-          <>
-            <div className="flex items-center justify-center order-2 lg:order-1">
-              {textContent}
-            </div>
-            <div className="flex items-center justify-center order-1 lg:order-2">
+          </div>
+        </div>
+        
+        {/* Tablet Portrait: Better vertical stacking */}
+        <div className="hidden md:block xl:hidden h-full">
+          <div className="flex flex-col h-full p-4">
+            <div className="flex-1 flex items-center justify-center max-h-[50%]">
               {imageContent}
             </div>
-          </>
-        )}
+            <div className="flex-1 flex items-center justify-center px-6 py-4 max-h-[50%] overflow-y-auto">
+              {textContent}
+            </div>
+          </div>
+        </div>
+        
+        {/* Desktop/Large Tablet Landscape: Side by side */}
+        <div className="hidden xl:grid xl:grid-cols-2 h-full gap-6">
+          {page.imagePosition === 'left' ? (
+            <>
+              <div className="flex items-center justify-center">
+                {imageContent}
+              </div>
+              <div className="flex items-center justify-center">
+                {textContent}
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center justify-center">
+                {textContent}
+              </div>
+              <div className="flex items-center justify-center">
+                {imageContent}
+              </div>
+            </>
+          )}
+        </div>
       </div>
     )
   }
