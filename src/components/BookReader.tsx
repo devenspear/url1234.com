@@ -15,6 +15,7 @@ export default function BookReader() {
   const [isClient, setIsClient] = useState(false)
   const [touchStart, setTouchStart] = useState<number | null>(null)
   const [touchEnd, setTouchEnd] = useState<number | null>(null)
+  const [animationDirection, setAnimationDirection] = useState<'forward' | 'backward'>('forward')
 
   useEffect(() => {
     setIsClient(true)
@@ -37,6 +38,7 @@ export default function BookReader() {
 
   const nextPage = () => {
     if (currentPage < pages.length - 1) {
+      setAnimationDirection('forward')
       if (soundManager && soundEnabled) {
         soundManager.playPageTurn()
       }
@@ -46,6 +48,7 @@ export default function BookReader() {
 
   const prevPage = () => {
     if (currentPage > 0) {
+      setAnimationDirection('backward')
       if (soundManager && soundEnabled) {
         soundManager.playPageTurn()
       }
@@ -55,6 +58,7 @@ export default function BookReader() {
 
   const goToPage = (pageIndex: number) => {
     if (pageIndex >= 0 && pageIndex < pages.length) {
+      setAnimationDirection(pageIndex > currentPage ? 'forward' : 'backward')
       if (soundManager && soundEnabled) {
         soundManager.playPageTurn()
       }
@@ -115,12 +119,18 @@ export default function BookReader() {
         onTouchEnd={onTouchEnd}
       >
         <div className="relative w-full h-full" style={{ perspective: '2000px' }}>
-          <AnimatePresence mode="wait" custom={currentPage}>
+          <AnimatePresence mode="wait" custom={animationDirection}>
             <motion.div
               key={currentPage}
-              initial={{ x: '100%', opacity: 0 }}
+              initial={{ 
+                x: animationDirection === 'forward' ? '100%' : '-100%', 
+                opacity: 0 
+              }}
               animate={{ x: 0, opacity: 1 }}
-              exit={{ x: '-100%', opacity: 0 }}
+              exit={{ 
+                x: animationDirection === 'forward' ? '-100%' : '100%', 
+                opacity: 0 
+              }}
               transition={{
                 duration: 0.3,
                 ease: [0.4, 0, 0.2, 1]
