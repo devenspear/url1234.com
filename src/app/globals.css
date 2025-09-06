@@ -150,3 +150,16 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Bunny Garden Book Fonts */
+.font-bubblegum {
+  font-family: var(--font-bubblegum), cursive;
+}
+
+.font-fredoka {
+  font-family: var(--font-fredoka), sans-serif;
+}
+
+.font-baloo {
+  font-family: var(--font-baloo), sans-serif;
+}
