@@ -10,10 +10,9 @@ export default function OrientationPrompt() {
 
   useEffect(() => {
     const checkOrientation = () => {
-      // Only show on mobile devices (width < 768px) in portrait mode
-      const isMobile = window.innerWidth < 768
-      const isPortrait = window.innerHeight > window.innerWidth
-      const shouldShow = isMobile && isPortrait && !dismissed
+      const isSmallScreen = window.innerWidth < 768
+      const isMobilePhone = window.innerWidth < 480 || (window.navigator && /iPhone|Android.*Mobile/i.test(window.navigator.userAgent))
+      const shouldShow = (isSmallScreen || isMobilePhone) && !dismissed
       
       setShowPrompt(shouldShow)
     }
@@ -57,11 +56,13 @@ export default function OrientationPrompt() {
             </motion.div>
             
             <h3 className="text-xl font-bubblegum font-bold text-gray-800 mb-4">
-              📚 Better Reading Experience!
+              📚 Optimal Viewing Experience
             </h3>
             
             <p className="text-gray-600 mb-6 font-baloo leading-relaxed">
-              For the best experience reading Bunny&apos;s story, please rotate your device to <strong>landscape mode</strong> (sideways) 📱➡️📱
+              Bunny&apos;s Thank-You Garden is designed for the best experience on <strong>iPad in landscape mode</strong> or <strong>desktop web browsers</strong>. 
+              <br/><br/>
+              The interactive story features and beautiful layouts work best on larger screens! 🌸✨
             </p>
             
             <div className="space-y-3">
@@ -69,13 +70,13 @@ export default function OrientationPrompt() {
                 onClick={handleDismiss}
                 className="w-full px-6 py-3 bg-green-500 text-white rounded-full font-baloo font-semibold hover:bg-green-600 transition-colors"
               >
-                Got it! 👍
+                I&apos;ll switch to iPad/Desktop! 📱➡️💻
               </button>
               <button
                 onClick={handleDismiss}
                 className="w-full px-6 py-3 bg-gray-100 text-gray-600 rounded-full font-baloo hover:bg-gray-200 transition-colors text-sm"
               >
-                Continue in Portrait
+                Continue anyway
               </button>
             </div>
           </motion.div>
