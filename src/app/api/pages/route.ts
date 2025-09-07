@@ -12,9 +12,10 @@ export async function GET() {
     const appDir = path.join(process.cwd(), 'src', 'app')
     const entries = await fs.readdir(appDir, { withFileTypes: true })
     
-    const pages = await Promise.all(
+    // Get root-level pages (excluding /p directory)
+    const rootPages = await Promise.all(
       entries
-        .filter(entry => entry.isDirectory() && !entry.name.startsWith('_') && !['api', 'globals.css', 'layout.tsx', 'favicon.ico'].includes(entry.name))
+        .filter(entry => entry.isDirectory() && !entry.name.startsWith('_') && !['api', 'templates', 'p', 'globals.css', 'layout.tsx', 'favicon.ico'].includes(entry.name))
         .map(async (dir) => {
           const metadataPath = path.join(appDir, dir.name, 'metadata.json')
           
@@ -46,6 +47,52 @@ export async function GET() {
           }
         })
     )
+
+    // Get pages from /p directory
+    let pPages = []
+    try {
+      const pDir = path.join(appDir, 'p')
+      const pEntries = await fs.readdir(pDir, { withFileTypes: true })
+      
+      pPages = await Promise.all(
+        pEntries
+          .filter(entry => entry.isDirectory() && !entry.name.startsWith('[') && !entry.name.startsWith('_'))
+          .map(async (dir) => {
+            const metadataPath = path.join(pDir, dir.name, 'metadata.json')
+            
+            try {
+              const metadataContent = await fs.readFile(metadataPath, 'utf-8')
+              const metadata = JSON.parse(metadataContent)
+              
+              return {
+                id: `p-${dir.name}`,
+                name: metadata.pageName || dir.name,
+                url: `/p/${dir.name}`,
+                template: metadata.templateId || 'unknown',
+                createdAt: metadata.createdAt || new Date().toISOString(),
+                lastModified: metadata.lastModified || new Date().toISOString(),
+                status: 'live'
+              }
+            } catch {
+              // If metadata.json doesn't exist, return basic info
+              const stat = await fs.stat(path.join(pDir, dir.name))
+              return {
+                id: `p-${dir.name}`,
+                name: dir.name,
+                url: `/p/${dir.name}`,
+                template: 'legacy',
+                createdAt: stat.birthtime.toISOString(),
+                lastModified: stat.mtime.toISOString(),
+                status: 'live'
+              }
+            }
+          })
+      )
+    } catch {
+      // If /p directory doesn't exist, just continue with empty array
+    }
+
+    const pages = [...rootPages, ...pPages]
 
     return NextResponse.json(pages)
   } catch (error) {
