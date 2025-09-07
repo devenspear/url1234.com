@@ -13,7 +13,7 @@
   },
   "headers": [
     {
-      "source": "/Templates",
+      "source": "/templates",
       "headers": [
         {
           "key": "Cache-Control",
@@ -24,8 +24,8 @@
   ],
   "rewrites": [
     {
-      "source": "/Templates",
-      "destination": "/Templates"
+      "source": "/templates",
+      "destination": "/templates"
     },
     {
       "source": "/api/:path*",
