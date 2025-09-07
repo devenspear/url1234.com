@@ -49,7 +49,15 @@ export async function GET() {
     )
 
     // Get pages from /p directory
-    let pPages = []
+    let pPages: Array<{
+      id: string
+      name: string
+      url: string
+      template: string
+      createdAt: string
+      lastModified: string
+      status: string
+    }> = []
     try {
       const pDir = path.join(appDir, 'p')
       const pEntries = await fs.readdir(pDir, { withFileTypes: true })
