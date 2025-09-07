@@ -21,7 +21,8 @@ import {
   ArrowRight,
   Moon,
   Sun,
-  FileText
+  FileText,
+  RefreshCw
 } from 'lucide-react'
 
 interface Template {
@@ -48,6 +49,7 @@ export default function PageManagerPage() {
   const [deployedPages, setDeployedPages] = useState<DeployedPage[]>([])
   const [isCreating, setIsCreating] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const [newPageUrl, setNewPageUrl] = useState('')
   const [copiedCode, setCopiedCode] = useState(false)
   const [activeTab, setActiveTab] = useState('templates')
@@ -126,15 +128,18 @@ export default function PageManagerPage() {
     }
   }, [])
 
-  const loadDeployedPages = async () => {
+  const loadDeployedPages = async (showLoading = false) => {
+    if (showLoading) setIsRefreshing(true)
     try {
-      const response = await fetch('/api/pages/list')
+      const response = await fetch('/api/pages')
       if (response.ok) {
         const data = await response.json()
-        setDeployedPages(data.pages)
+        setDeployedPages(data)
       }
     } catch (error) {
       console.error('Failed to load pages:', error)
+    } finally {
+      if (showLoading) setIsRefreshing(false)
     }
   }
 
@@ -525,6 +530,30 @@ export default function ${newPageUrl || 'YourPage'}Page() {
           {/* Pages Tab */}
           {activeTab === 'pages' && (
             <div className="space-y-6">
+              {/* Pages Header with Refresh Button */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    Deployed Pages
+                  </h2>
+                  <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    {deployedPages.length} page{deployedPages.length !== 1 ? 's' : ''} deployed
+                  </p>
+                </div>
+                <button
+                  onClick={() => loadDeployedPages(true)}
+                  disabled={isRefreshing}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
+                    isDarkMode 
+                      ? 'bg-blue-600 hover:bg-blue-700 text-white disabled:bg-blue-800 disabled:opacity-50' 
+                      : 'bg-blue-600 hover:bg-blue-700 text-white disabled:bg-blue-300'
+                  }`}
+                >
+                  <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                  {isRefreshing ? 'Refreshing...' : 'Refresh'}
+                </button>
+              </div>
+
               {deployedPages.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {deployedPages.map((page) => (
