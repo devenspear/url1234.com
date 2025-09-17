@@ -1,16 +1,16 @@
 'use client'
 
 import { Inter, Playfair_Display } from 'next/font/google';
-import '../../../styles/kaleidoscope.css';
-import KaleidoscopeHero from '../../../components/kaleidoscope/Hero/KaleidoscopeHero';
-import AboutSection from '../../../components/kaleidoscope/sections/AboutSection';
-import ProblemSection from '../../../components/kaleidoscope/sections/ProblemSection';
-import ApproachSection from '../../../components/kaleidoscope/sections/ApproachSection';
-import MethodSection from '../../../components/kaleidoscope/sections/MethodSection';
-import TestimonialSection from '../../../components/kaleidoscope/sections/TestimonialSection';
-import CTASection from '../../../components/kaleidoscope/sections/CTASection';
-import BookSection from '../../../components/kaleidoscope/sections/BookSection';
-import Footer from '../../../components/kaleidoscope/shared/Footer';
+import '../../styles/kaleidoscope.css';
+import KaleidoscopeHero from '../../components/kaleidoscope/Hero/KaleidoscopeHero';
+import AboutSection from '../../components/kaleidoscope/sections/AboutSection';
+import ProblemSection from '../../components/kaleidoscope/sections/ProblemSection';
+import ApproachSection from '../../components/kaleidoscope/sections/ApproachSection';
+import MethodSection from '../../components/kaleidoscope/sections/MethodSection';
+import TestimonialSection from '../../components/kaleidoscope/sections/TestimonialSection';
+import CTASection from '../../components/kaleidoscope/sections/CTASection';
+import BookSection from '../../components/kaleidoscope/sections/BookSection';
+import Footer from '../../components/kaleidoscope/shared/Footer';
 
 const inter = Inter({ subsets: ['latin'] });
 const playfair = Playfair_Display({ subsets: ['latin'] });

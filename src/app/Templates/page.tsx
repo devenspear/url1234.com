@@ -446,7 +446,7 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                         <label className={`block text-sm font-semibold mb-3 ${isDarkMode ? 'text-indigo-200' : 'text-indigo-800'}`}>Page URL</label>
                         <div className="flex items-center space-x-0">
                           <span className={`px-3 py-3 text-sm rounded-l-xl border border-r-0 ${isDarkMode ? 'bg-gray-700 text-gray-300 border-gray-600' : 'bg-white text-gray-500 border-gray-300'}`}>
-                            url1234.com/p/
+                            url1234.com/
                           </span>
                           <input
                             type="text"
@@ -587,7 +587,7 @@ export default function ${newPageUrl || 'YourPage'}Page() {
                       <div className="flex gap-3">
                         <button 
                           className="flex-1 px-6 py-4 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 text-sm"
-                          onClick={() => window.open(`/p/${page.name}`, '_blank')}
+                          onClick={() => window.open(`/${page.name}`, '_blank')}
                         >
                           <ExternalLink className="w-4 h-4" />
                           Visit Page
