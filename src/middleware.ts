@@ -21,14 +21,8 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(redirectUrl, 301) // Permanent redirect
     }
 
-    // Special handling for HomebuilderAI - rewrite to deployed app
-    if (subdomain === 'homebuilderai') {
-      const homebuilderAIUrl = 'https://homebuilder-ai-r0rrs3ufc-deven-projects.vercel.app'
-      const targetUrl = new URL(url.pathname + url.search, homebuilderAIUrl)
-
-      // Use rewrite to serve content while keeping the original domain
-      return NextResponse.rewrite(targetUrl.toString())
-    }
+    // HomebuilderAI subdomain is handled by direct domain assignment in Vercel
+    // No special middleware needed - domain points directly to HomebuilderAI deployment
 
     // Allow static assets to be served from subdomains
     if (url.pathname.startsWith('/Images/') ||
