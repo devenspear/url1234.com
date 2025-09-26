@@ -1,0 +1,12 @@
+# Exclude HomebuilderAI submodule from ESLint checks
+src/homebuilder-source/**/*
+
+# Node modules
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Generated files
+*.d.ts
