@@ -1,0 +1,3 @@
+[submodule "src/homebuilder-source"]
+	path = src/homebuilder-source
+	url = https://github.com/devenspear/HomebuilderAI.git

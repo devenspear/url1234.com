@@ -9,6 +9,12 @@
     },
     "src/app/api/pages/route.ts": {
       "maxDuration": 20
+    },
+    "src/app/api/subdomains/route.ts": {
+      "maxDuration": 30
+    },
+    "src/app/api/subdomains/[subdomain]/route.ts": {
+      "maxDuration": 30
     }
   },
   "headers": [
@@ -20,12 +26,21 @@
           "value": "no-cache, no-store, must-revalidate"
         }
       ]
+    },
+    {
+      "source": "/admin",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
     }
   ],
   "rewrites": [
     {
       "source": "/templates",
-      "destination": "/templates"
+      "destination": "/admin"
     },
     {
       "source": "/api/:path*",

@@ -1,0 +1,59 @@
+name: Sync HomebuilderAI Updates
+
+# Trigger when HomebuilderAI repo updates
+on:
+  repository_dispatch:
+    types: [homebuilder-updated]
+  workflow_dispatch: # Manual trigger
+  schedule:
+    - cron: '*/15 * * * *' # Check every 15 minutes for submodule updates
+
+jobs:
+  sync-homebuilder:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'deven-projects' # Security check
+
+    steps:
+      - name: Checkout url1234.com
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: recursive
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Update HomebuilderAI Submodule
+        run: |
+          git submodule update --remote src/homebuilder-source
+
+      - name: Check for Changes
+        id: changes
+        run: |
+          git diff --quiet HEAD^ || echo "changes=true" >> $GITHUB_OUTPUT
+
+      - name: Install Dependencies
+        if: steps.changes.outputs.changes == 'true'
+        run: npm ci
+
+      - name: Build Project
+        if: steps.changes.outputs.changes == 'true'
+        run: npm run build
+
+      - name: Commit Updates
+        if: steps.changes.outputs.changes == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action Bot"
+          git add .
+          git commit -m "🤖 Auto-sync HomebuilderAI updates [skip ci]" || exit 0
+          git push
+
+      - name: Trigger Vercel Deployment
+        if: steps.changes.outputs.changes == 'true'
+        run: |
+          echo "✅ HomebuilderAI changes detected and pushed"
+          echo "🚀 Vercel will automatically redeploy homebuilderai.url1234.com"
