@@ -20,18 +20,6 @@ const HomebuilderSplashPage = dynamic(
   }
 )
 
-// Dynamically import the main app layout when needed
-const HomebuilderApp = dynamic(
-  () => import('../../../homebuilder-source/app/layout').then(mod => ({ default: mod.default })),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full"></div>
-      </div>
-    )
-  }
-)
 
 export default function HomebuilderAISubdomain() {
   const [showApp, setShowApp] = useState(false)
@@ -62,7 +50,7 @@ export default function HomebuilderAISubdomain() {
     return <HomebuilderSplashPage onEnter={handleEnterApp} />
   }
 
-  // For now, redirect to the dashboard since we need to properly integrate the full app
+  // Redirect to the HomebuilderAI dashboard on the subdomain
   if (typeof window !== 'undefined') {
     window.location.href = '/dashboard'
   }
@@ -79,12 +67,12 @@ export default function HomebuilderAISubdomain() {
         <p className="text-lg text-gray-600 mb-8">
           Your AI-powered home design and construction platform
         </p>
-        <a
-          href="/dashboard"
+        <button
+          onClick={() => window.location.href = '/dashboard'}
           className="inline-flex items-center gap-3 px-8 py-4 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors"
         >
           <span>🚀 Enter Dashboard</span>
-        </a>
+        </button>
       </div>
     </div>
   )
