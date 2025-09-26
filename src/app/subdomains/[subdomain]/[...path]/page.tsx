@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { notFound } from 'next/navigation'
+import dynamic from 'next/dynamic'
 import { SubdomainRenderer } from '@/components/subdomain/SubdomainRenderer'
+import HomebuilderDashboard from '@/components/HomebuilderDashboard'
 
 interface NestedPageProps {
   params: Promise<{
@@ -81,6 +83,11 @@ export default function SubdomainNestedPage({ params }: NestedPageProps) {
 
   // Handle different nested paths based on template type
   const currentPath = path.join('/')
+
+  // For HomebuilderAI subdomain, show dashboard
+  if (subdomain === 'homebuilderai') {
+    return <HomebuilderDashboard />
+  }
 
   // For kaleidoscope subdomain, handle special paths like /book, /contact, etc.
   if (subdomainConfig.templateId === 'kaleidoscope-recovery') {
@@ -255,3 +262,4 @@ function renderBookChapter(chapterNumber: number) {
     </div>
   )
 }
+
