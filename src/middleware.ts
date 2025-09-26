@@ -21,11 +21,13 @@ export function middleware(request: NextRequest) {
       return NextResponse.redirect(redirectUrl, 301) // Permanent redirect
     }
 
-    // Special handling for HomebuilderAI - redirect to deployed app
+    // Special handling for HomebuilderAI - rewrite to deployed app
     if (subdomain === 'homebuilderai') {
       const homebuilderAIUrl = 'https://homebuilder-ai-r0rrs3ufc-deven-projects.vercel.app'
       const targetUrl = new URL(url.pathname + url.search, homebuilderAIUrl)
-      return NextResponse.redirect(targetUrl.toString())
+
+      // Use rewrite to serve content while keeping the original domain
+      return NextResponse.rewrite(targetUrl.toString())
     }
 
     // Allow static assets to be served from subdomains
