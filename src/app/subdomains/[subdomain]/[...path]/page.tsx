@@ -84,9 +84,40 @@ export default function SubdomainNestedPage({ params }: NestedPageProps) {
   // Handle different nested paths based on template type
   const currentPath = path.join('/')
 
-  // For HomebuilderAI subdomain, show dashboard
+  // For HomebuilderAI subdomain, show work in progress message
   if (subdomain === 'homebuilderai') {
-    return <HomebuilderDashboard />
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="text-center max-w-2xl mx-auto p-8">
+          <div className="w-24 h-24 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-8">
+            <span className="text-4xl">🏗️</span>
+          </div>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            HomebuilderAI Integration In Progress
+          </h1>
+          <p className="text-xl text-gray-600 mb-6">
+            We're currently integrating the complete HomebuilderAI application to this subdomain.
+            The full application with all modules will be available shortly.
+          </p>
+          <div className="bg-white p-6 rounded-xl shadow-lg mb-6">
+            <h3 className="font-semibold text-gray-900 mb-4">What's Coming:</h3>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>• Complete Dashboard</div>
+              <div>• Glossary Lab</div>
+              <div>• Drips Generator</div>
+              <div>• Simulator</div>
+              <div>• AI Visibility Audit</div>
+              <div>• Lead Scoring</div>
+              <div>• AI Frame Builder</div>
+              <div>• MarvelBot Studio</div>
+            </div>
+          </div>
+          <p className="text-gray-500">
+            Path: /{currentPath || 'home'}
+          </p>
+        </div>
+      </div>
+    )
   }
 
   // For kaleidoscope subdomain, handle special paths like /book, /contact, etc.
