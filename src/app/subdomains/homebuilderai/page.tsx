@@ -27,6 +27,14 @@ export default function HomebuilderAISubdomain() {
 
   useEffect(() => {
     setMounted(true)
+    // Set the document title for HomebuilderAI
+    document.title = 'HomebuilderAI Interactive - Proof of Concept'
+
+    // Set meta description
+    const metaDescription = document.querySelector('meta[name="description"]')
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'AI-powered home building and design dashboard featuring Aiglish, AI Frames, and AI Sales Flow')
+    }
   }, [])
 
   const handleEnterApp = () => {
