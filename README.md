@@ -22,7 +22,6 @@ A sophisticated multi-tenant system for managing both template-based landing pag
 ### 🌐 **Subdomain System**
 - **homebuilderai.url1234.com** - HomebuilderAI Interactive Demo (Git submodule)
 - **bunny-garden.url1234.com** - Interactive Book Template
-- **kaleidoscope.url1234.com** - Recovery Center Template
 - **[custom].url1234.com** - Add new subdomains via admin interface
 
 ## Architecture
@@ -68,7 +67,6 @@ The url1234.com project now supports multi-tenant subdomain architecture with au
 |-----------|------|--------|--------|
 | homebuilderai.url1234.com | Git Submodule | [HomebuilderAI](https://github.com/devenspear/HomebuilderAI) | ✅ Active |
 | bunny-garden.url1234.com | Template | Local template | ✅ Active |
-| kaleidoscope.url1234.com | Template | Local template | ✅ Active |
 
 ---
 
@@ -451,7 +449,6 @@ url1234.com/
 │   │   │   │   ├── layout.tsx                 # Metadata configuration
 │   │   │   │   └── dashboard/page.tsx         # Dashboard placeholder
 │   │   │   ├── bunny-garden/                  # Bunny Garden Subdomain
-│   │   │   └── kaleidoscope/                  # Kaleidoscope Subdomain
 │   │   ├── p/[slug]/page.tsx                  # Dynamic route for generated pages
 │   │   ├── p/[generated-page-name]/           # Generated page directories
 │   │   │   ├── page.tsx                       # Page component
