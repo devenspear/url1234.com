@@ -3,13 +3,9 @@ import { LAB_ROOT_DOMAIN } from '@/lib/config'
 
 export function middleware(request: NextRequest) {
   const url = request.nextUrl.clone()
-  const hostname = request.headers.get('host')
 
-  if (!hostname) {
-    return NextResponse.next()
-  }
-
-  // Check admin authentication
+  // Only handle admin authentication protection
+  // Don't interfere with subdomain routing - let Vercel handle that
   if (url.pathname.startsWith('/admin') && url.pathname !== '/admin/login') {
     const adminSession = request.cookies.get('admin-session')
 
@@ -17,30 +13,6 @@ export function middleware(request: NextRequest) {
       url.pathname = '/admin/login'
       return NextResponse.redirect(url)
     }
-  }
-
-  // Extract subdomain from hostname
-  const hostParts = hostname.split('.')
-
-  // Handle requests to root domain (no subdomain)
-  if (hostname === LAB_ROOT_DOMAIN || hostname === `www.${LAB_ROOT_DOMAIN}`) {
-    return NextResponse.next()
-  }
-
-  // Handle subdomain requests
-  if (hostParts.length > 2 && hostname.endsWith(LAB_ROOT_DOMAIN)) {
-    const subdomain = hostParts[0]
-
-    // Skip admin and api subdomains
-    if (subdomain === 'admin' || subdomain === 'api') {
-      return NextResponse.next()
-    }
-
-    // For all other subdomains, show a simple "not found" message
-    // without any buttons that could be exploited
-    url.pathname = '/subdomain-not-found'
-    url.searchParams.set('subdomain', subdomain)
-    return NextResponse.rewrite(url)
   }
 
   return NextResponse.next()
